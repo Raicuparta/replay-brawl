@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityStandardAssets._2D;
+using System.Collections.Generic;
 
 public class Capture : MonoBehaviour {
     public bool Recording = false;
@@ -9,8 +9,10 @@ public class Capture : MonoBehaviour {
     int TickCount = 0;
 
     Rigidbody2D Body;
-    ArrayList Steps;
 
+    List<Step> Steps;
+
+    [System.Serializable]
     public class Step {
         public Vector3 Position;
         public Vector3 Velocity;
@@ -19,11 +21,15 @@ public class Capture : MonoBehaviour {
             Position = position;
             Velocity = velocity;
         }
+
+        public override string ToString() {
+            return "P" + PrintVector(Position) + "V" + PrintVector(Velocity);
+        }
     }
 
     // Use this for initialization
     void Start() {
-        Steps = new ArrayList();
+        Steps = new List<Step>();
         Body = GetComponent<Rigidbody2D>();
     }
 
@@ -36,8 +42,7 @@ public class Capture : MonoBehaviour {
 
         if (Replaying) {
             if (Recording) {
-
-                Debug.Log(JsonUtility.ToJson(Steps));
+                Debug.Log(PrintSteps(Steps));
                 TickCount = 0;
                 Recording = false;
                 GetComponent<Platformer2DUserControl>().enabled = false;
@@ -47,5 +52,18 @@ public class Capture : MonoBehaviour {
             Body.velocity = ((Step) Steps[TickCount]).Velocity;
             Body.position = ((Step)Steps[TickCount]).Position;
         }
+    }
+
+    static string PrintSteps (List<Step> steps) {
+        string result = "";
+
+        for (int i = 0; i < steps.Count; i++)
+            result += steps[i] + "|";
+
+        return result;
+    }
+
+    static string PrintVector (Vector3 vector) {
+        return "(" + vector.x + "," + vector.y + "," + vector.z + ")";
     }
 }
