@@ -13,9 +13,11 @@ public class Capture : MonoBehaviour {
 
     public class Step {
         public Vector3 Position;
+        public Vector3 Velocity;
 
-        public Step(Vector3 position) {
+        public Step(Vector3 position, Vector3 velocity) {
             Position = position;
+            Velocity = velocity;
         }
     }
 
@@ -29,18 +31,21 @@ public class Capture : MonoBehaviour {
         if (Recording || Replaying) TickCount++;
 
         if (Recording) {
-            Steps.Add(new Step(Body.velocity));
+            Steps.Add(new Step(Body.position, Body.velocity));
         }
 
         if (Replaying) {
             if (Recording) {
+
+                Debug.Log(JsonUtility.ToJson(Steps));
                 TickCount = 0;
                 Recording = false;
                 GetComponent<Platformer2DUserControl>().enabled = false;
                 GetComponent<PlatformerCharacter2D>().enabled = false;
                 //GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
             }
-            Body.velocity = ((Step) Steps[TickCount]).Position;
+            Body.velocity = ((Step) Steps[TickCount]).Velocity;
+            Body.position = ((Step)Steps[TickCount]).Position;
         }
     }
 }
