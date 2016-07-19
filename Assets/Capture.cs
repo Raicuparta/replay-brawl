@@ -15,15 +15,13 @@ public class Capture : MonoBehaviour {
     [System.Serializable]
     public class Step {
         public Vector3 Position;
-        public Vector3 Velocity;
 
-        public Step(Vector3 position, Vector3 velocity) {
+        public Step(Vector3 position) {
             Position = position;
-            Velocity = velocity;
         }
 
         public override string ToString() {
-            return VectorToString(Position) + "V" + VectorToString(Velocity);
+            return VectorToString(Position);
         }
     }
 
@@ -37,19 +35,17 @@ public class Capture : MonoBehaviour {
         if (Recording || Replaying) TickCount++;
 
         if (Recording) {
-            Steps.Add(new Step(Body.position, Body.velocity));
+            Steps.Add(new Step(Body.position));
         }
 
         if (Replaying) {
             if (Recording) {
                 TickCount = 0;
                 Recording = false;
-                GetComponent<Platformer2DUserControl>().enabled = false;
-                GetComponent<PlatformerCharacter2D>().enabled = false;
                 //GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
             }
             if (TickCount >= Steps.Count) return;
-            Body.velocity = ((Step)Steps[TickCount]).Velocity;
+            //Body.velocity = ((Step)Steps[TickCount]).Velocity;
             Body.position = ((Step)Steps[TickCount]).Position;
         }
     }
@@ -64,7 +60,7 @@ public class Capture : MonoBehaviour {
     }
 
     private static string VectorToString(Vector3 vector) {
-        return "" + vector.x + "," + vector.y + "," + vector.z;
+        return "" + vector.x + "," + vector.y;
     }
 
     private Vector3 StringToVector(string s) {
@@ -74,7 +70,7 @@ public class Capture : MonoBehaviour {
         string[] values = s.Split(',');
         v.x = float.Parse(values[0]);
         v.y = float.Parse(values[1]);
-        v.z = float.Parse(values[2]);
+        v.z = 0;
         return v;
     }
 
@@ -84,11 +80,8 @@ public class Capture : MonoBehaviour {
         string[] steps = data.Split('|');
 
         for (int i = 0; i < steps.Length - 1; i++) {
-            string[] vectors = steps[i].Split('V');
-            Vector3 position = StringToVector(vectors[0]);
-            Vector3 velocity = StringToVector(vectors[1]);
-
-            Steps.Add(new Step(position, velocity));
+            Vector3 position = StringToVector(steps[i]);
+            Steps.Add(new Step(position));
         }
     }
 }
