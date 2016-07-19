@@ -68,9 +68,6 @@ public class Capture : MonoBehaviour {
     }
 
     private Vector3 StringToVector(string s) {
-        Debug.Log("---------- GONNA READ THIS VECTOR ------------");
-        Debug.Log(s);
-
         if (s.Length == 0) return Vector3.zero; // TODO deal with this
 
         Vector3 v = new Vector3();
@@ -82,9 +79,6 @@ public class Capture : MonoBehaviour {
     }
 
     public void ReadFromString(string data) {
-        Debug.Log("---------- GONNA READ THIS STRING ------------");
-        Debug.Log(data);
-
         Steps.Clear();
 
         string[] steps = data.Split('|');
@@ -96,8 +90,5 @@ public class Capture : MonoBehaviour {
 
             Steps.Add(new Step(position, velocity));
         }
-        Debug.Log("---------- AFTER READ FROM STRING------------");
-        Debug.Log(ToString());
-
     }
 }

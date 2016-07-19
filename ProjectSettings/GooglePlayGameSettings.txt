@@ -8,3 +8,5 @@ and.ClientId=
 proj.requireGPlus=false
 android.SetupDone=true
 and.BundleId=co.bravebunny.replaybrawl
+App.NearbdServiceId=co.bravebunny.replaybrawl.nearby
+android.NearbySetupDone=true

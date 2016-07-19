@@ -40,7 +40,7 @@ namespace GooglePlayGames {
         public const string ApplicationId = "1580203343"; // Filled in automatically
         public const string IosClientId = ""; // Filled in automatically
         public const string WebClientId = ""; // Filled in automatically
-        public const string NearbyConnectionServiceId = "";
+        public const string NearbyConnectionServiceId = "co.bravebunny.replaybrawl.nearby";
 
         public static bool RequireGooglePlus()
         {
