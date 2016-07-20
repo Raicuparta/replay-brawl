@@ -17,7 +17,7 @@ public class CharacterAnimator : MonoBehaviour {
 
     private void Movement() {
         // Wait until there's enough info to calculate the direction 
-        if (Cap.TickCount < 2 || Cap.Steps.Count > Cap.TickCount) return;
+        if (Cap.TickCount < 2 || Cap.Steps.Count < Cap.TickCount) return;
         HorizontalMovement();
         VerticalMovement();
     }
@@ -47,7 +47,6 @@ public class CharacterAnimator : MonoBehaviour {
         float y1 = Cap.Steps[Cap.TickCount - 2].y;
 
         float vSpeed = Mathf.Round((y0 - y1)*100); // Spaghetti number six
-        Debug.Log(vSpeed);
         Anim.SetFloat("vSpeed", vSpeed); // Animator uses this to pick animation
 
         Anim.SetBool("Ground", vSpeed == 0);
