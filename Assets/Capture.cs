@@ -37,7 +37,7 @@ public class Capture : MonoBehaviour {
     void FixedUpdate() {
         if (Recording || Replaying) TickCount++;
 
-        if (Recording) {
+        if (Recording && PlayerControl) {
             float attack = PlayerControl.GetAttack() ? 1 : 0;
             Vector3 position = new Vector3(Body.position.x, Body.position.y, attack);
             Steps.Add(new Step(position));
