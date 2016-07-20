@@ -47,7 +47,7 @@ public class WelcomeGui : BaseGui {
         // enable debug logs (note: we do this because this is a sample; on your production
         // app, you probably don't want this turned on by default, as it will fill the user's
         // logs with debug info).
-        PlayGamesPlatform.DebugLogEnabled = true;
+        PlayGamesPlatform.DebugLogEnabled = false;
 
         // try silent authentication
         if (mAuthOnStart) {
