@@ -30,7 +30,7 @@ public class PlayGui : BaseGui {
     private const string OBlockPrefabName = "OBlock";
     private const string LargeMarkPrefix = "LargeMark";  // + "X00", "X01", "O00", etc
 
-    WidgetConfig DoneCfg = new WidgetConfig(0.0f, -0.2f, 0.8f, 0.2f, 60, "Done");
+    WidgetConfig DoneCfg = new WidgetConfig(-0.2f, -0.2f, 0.2f, 0.1f, 60, "Done");
     WidgetConfig OkButtonCfg = new WidgetConfig(0.0f, 0.4f, 0.4f, 0.2f, 60, "OK");
 
     private TurnBasedMatch mMatch = null;
@@ -72,6 +72,8 @@ public class PlayGui : BaseGui {
         mShowInstructions = false;
         Util.MakeVisible(Playfield, false);
         Opponent.gameObject.SetActive(true);
+        Opponent.Reset();
+        //Player.Reset();
     }
 
     public void LaunchMatch(TurnBasedMatch match) {

@@ -9,6 +9,7 @@ public class Capture : MonoBehaviour {
     Rigidbody2D Body;
     PlatformerCharacter2D Player;
     Platformer2DUserControl PlayerControl;
+    Vector2 StartPosition;
 
     [System.NonSerialized]
     public List<Vector3> Steps;
@@ -21,6 +22,7 @@ public class Capture : MonoBehaviour {
         Body = GetComponent<Rigidbody2D>();
         Player = GetComponent<PlatformerCharacter2D>();
         PlayerControl = GetComponent<Platformer2DUserControl>();
+        StartPosition = Body.position;
     }
 
     void FixedUpdate() {
@@ -49,19 +51,19 @@ public class Capture : MonoBehaviour {
         for (int i = 0; i < Steps.Count; i++)
             result += VectorToString(Steps[i]) + "|";
 
-        //Debug.Log("####### ToString: " + result);
+        Debug.Log("####### ToString: " + result);
         return result;
     }
 
     private static string VectorToString(Vector3 vector) {
         string result = "" + vector.x + "," + vector.y;
         if (vector.z != 0) result += "," + vector.z;
-        //Debug.Log("####### VectorToString: " + result);
+        Debug.Log("####### VectorToString: " + result);
         return result;
     }
 
     private Vector3 StringToVector(string s) {
-        //Debug.Log("####### StringToVector: " + s);
+        Debug.Log("####### StringToVector: " + s);
         if (s.Length == 0) return Vector3.zero; // TODO deal with this
 
         Vector3 v = new Vector3();
@@ -76,7 +78,7 @@ public class Capture : MonoBehaviour {
     }
 
     public void ReadFromString(string data) {
-        //Debug.Log("####### ReadFromString: " + data);
+        Debug.Log("####### ReadFromString: " + data);
         Steps.Clear();
 
         string[] steps = data.Split('|');
@@ -85,5 +87,11 @@ public class Capture : MonoBehaviour {
             Vector3 position = StringToVector(steps[i]);
             Steps.Add(position);
         }
+    }
+
+    public void Reset() {
+        Steps.Clear();
+        Body.position = StartPosition;
+        TickCount = 0;
     }
 }
