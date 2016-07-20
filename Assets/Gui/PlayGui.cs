@@ -71,6 +71,7 @@ public class PlayGui : BaseGui {
         mEndingTurn = false;
         mShowInstructions = false;
         Util.MakeVisible(Playfield, false);
+        Opponent.gameObject.SetActive(true);
     }
 
     public void LaunchMatch(TurnBasedMatch match) {

@@ -34,7 +34,7 @@ public class Capture : MonoBehaviour {
 
         if (Replaying) {
             if (Recording) {
-                Debug.Log(ToString());
+                ToString();
                 TickCount = 0;
                 Recording = false;
             }
@@ -47,18 +47,21 @@ public class Capture : MonoBehaviour {
         string result = "";
 
         for (int i = 0; i < Steps.Count; i++)
-            result += Steps[i] + "|";
+            result += VectorToString(Steps[i]) + "|";
 
+        //Debug.Log("####### ToString: " + result);
         return result;
     }
 
     private static string VectorToString(Vector3 vector) {
-        string result = vector.x + "," + vector.y;
+        string result = "" + vector.x + "," + vector.y;
         if (vector.z != 0) result += "," + vector.z;
+        //Debug.Log("####### VectorToString: " + result);
         return result;
     }
 
     private Vector3 StringToVector(string s) {
+        //Debug.Log("####### StringToVector: " + s);
         if (s.Length == 0) return Vector3.zero; // TODO deal with this
 
         Vector3 v = new Vector3();
@@ -73,6 +76,7 @@ public class Capture : MonoBehaviour {
     }
 
     public void ReadFromString(string data) {
+        //Debug.Log("####### ReadFromString: " + data);
         Steps.Clear();
 
         string[] steps = data.Split('|');

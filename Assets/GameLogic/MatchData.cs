@@ -170,23 +170,6 @@ public class MatchData {
 
         w.Write(Replay);
 
-        /*int x;
-        for (x = 0; x < mBoard.Length; x++) {
-            w.Write(mBoard[x]);
-        }
-        w.Write(mBlockDescs.Count);
-        foreach (BlockDesc b in mBlockDescs) {
-            w.Write(b.mark);
-            w.Write(b.position.x);
-            w.Write(b.position.y);
-            w.Write(b.position.z);
-            w.Write(b.rotation.x);
-            w.Write(b.rotation.y);
-            w.Write(b.rotation.z);
-            w.Write(b.rotation.w);
-        }*/
-
-
         w.Close();
         byte[] buf = memStream.GetBuffer();
         memStream.Close();
@@ -206,28 +189,6 @@ public class MatchData {
         mParticipantIdX = new string(r.ReadChars(len));
 
         Replay = r.ReadString();
-
-        /*int x;
-        for (x = 0; x < mBoard.Length; x++) {
-            mBoard[x] = r.ReadChars(mBoard.Length);
-        }
-        ComputeWinner();
-
-        mBlockDescs.Clear();
-        int blockDescs = r.ReadInt32(), i;
-        for (i = 0; i < blockDescs; i++) {
-            float px, py, pz, rx, ry, rz, rw;
-            char mark = r.ReadChar();
-            px = r.ReadSingle();
-            py = r.ReadSingle();
-            pz = r.ReadSingle();
-            rx = r.ReadSingle();
-            ry = r.ReadSingle();
-            rz = r.ReadSingle();
-            rw = r.ReadSingle();
-            mBlockDescs.Add(new BlockDesc(mark, new Vector3(px, py, pz),
-                    new Quaternion(rx, ry, rz, rw)));
-        }*/
     }
 
     public char GetMyMark(string myParticipantId) {
