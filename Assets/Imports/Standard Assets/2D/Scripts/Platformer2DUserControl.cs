@@ -39,5 +39,9 @@ namespace UnityStandardAssets._2D
             m_Jump = false;
             m_Attack = false;
         }
+
+        public bool GetAttack() {
+            return m_Attack;
+        }
     }
 }
