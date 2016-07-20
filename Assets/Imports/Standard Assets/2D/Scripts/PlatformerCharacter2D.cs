@@ -19,7 +19,6 @@ namespace UnityStandardAssets._2D {
         private Transform m_CeilingCheck;   // A position marking where to check for ceilings
         const float k_CeilingRadius = .01f; // Radius of the overlap circle to determine if the player can stand up
         private Rigidbody2D m_Rigidbody2D;
-        private bool m_FacingRight = true;  // For determining which way the player is currently facing.
 
         private void Awake() {
             // Setting up references.
@@ -45,10 +44,6 @@ namespace UnityStandardAssets._2D {
             if (m_Grounded || m_AirControl) {
                 // Move the character
                 m_Rigidbody2D.velocity = new Vector2(move * m_MaxSpeed, m_Rigidbody2D.velocity.y);
-
-                // Flip if necessary
-                if (move > 0 && !m_FacingRight || move < 0 && m_FacingRight)
-                    Flip();
             }
 
             // If the player should jump...
@@ -63,17 +58,6 @@ namespace UnityStandardAssets._2D {
                 Debug.Log("Attack");
                 m_Attacking = true;
             }
-        }
-
-
-        private void Flip() {
-            // Switch the way the player is labelled as facing.
-            m_FacingRight = !m_FacingRight;
-
-            // Multiply the player's x local scale by -1.
-            Vector3 theScale = transform.localScale;
-            theScale.x *= -1;
-            transform.localScale = theScale;
         }
     }
 }
