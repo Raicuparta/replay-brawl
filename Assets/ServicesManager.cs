@@ -2,9 +2,12 @@
 using GooglePlayGames.BasicApi;
 using GooglePlayGames.BasicApi.Multiplayer;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ServicesManager : MonoBehaviour {
+    public static TurnBasedMatch Match;
+
     bool AuthOnStart = true;
     System.Action<bool> AuthCallback;
 
@@ -14,6 +17,10 @@ public class ServicesManager : MonoBehaviour {
     private const uint Variant = 0xffffffff;
 
     void Start() {
+        // Prevent this object from being destroyed when changing scenes
+        // This is so we can load the match information from here later
+        DontDestroyOnLoad(transform.gameObject);
+
         AuthCallback = (bool success) => {
             if (success) {
                 Debug.Log("Login Success");
@@ -30,6 +37,7 @@ public class ServicesManager : MonoBehaviour {
             } else Debug.LogError("Error logging in");
         };
 
+        // Configure and initialize Play Services
         PlayGamesClientConfiguration config =
               new PlayGamesClientConfiguration.Builder()
                 .WithInvitationDelegate(OnGotInvitation)
@@ -46,11 +54,13 @@ public class ServicesManager : MonoBehaviour {
 
     public void Login() {
         // Request authentication
+        Debug.Log("Requesting authentication...");
         PlayGamesPlatform.Instance.localUser.Authenticate(AuthCallback);
     }
 
     public void Logout() {
         PlayGamesPlatform.Instance.SignOut();
+        Debug.Log("Logged out");
         foreach (Transform child in transform) {
             Button button = child.GetComponent<Button>();
             if (child.name == "Login") {
@@ -64,33 +74,41 @@ public class ServicesManager : MonoBehaviour {
     }
 
     public void Invite() {
+        Debug.Log("Inviting...");
         PlayGamesPlatform.Instance.TurnBased.CreateWithInvitationScreen(Opponents, Opponents, Variant, OnMatchStarted);
     }
 
     public void Random() {
+        Debug.Log("Randoming...");
         PlayGamesPlatform.Instance.TurnBased.CreateQuickMatch(Opponents, Opponents, Variant, OnMatchStarted);
     }
 
     public void Inbox() {
+        Debug.Log("Inboxing...");
         PlayGamesPlatform.Instance.TurnBased.AcceptFromInbox(OnMatchStarted);
     }
 
     protected void OnMatchStarted(bool success, TurnBasedMatch match) {
         if (!success) {
-            Debug.Log("Error starting match");
+            Debug.LogError("Error starting match");
             return;
         }
 
-        // TODO
+        Debug.Log("Match started");
+        Match = match;
+        SceneManager.LoadScene("TicTacToss");
     }
 
     protected void OnGotInvitation(Invitation invitation, bool shouldAutoAccept) {
         // Check if invite type is correct
         if (invitation.InvitationType != Invitation.InvType.TurnBased) return;
+
+        Debug.Log("Got invitation");
         // TODO
     }
 
     protected void OnGotMatch(TurnBasedMatch match, bool shouldAutoLaunch) {
+        Debug.Log("Got match");
         // TODO
     }
 }

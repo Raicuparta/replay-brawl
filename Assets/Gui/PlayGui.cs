@@ -61,6 +61,10 @@ public class PlayGui : BaseGui {
     // countdown to hide instructions
     private bool mShowInstructions = false;
 
+    void Start() {
+        LaunchMatch(ServicesManager.Match);
+    }
+
     private void Reset() {
         mMatch = null;
         mMatchData = null;
