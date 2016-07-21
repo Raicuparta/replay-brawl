@@ -59,6 +59,7 @@ namespace UnityStandardAssets._2D {
 
         public void EndAttack() {
             AttackAnimation = false;
+            Attacking = false;
             CurrentAttackTime = 0;
             GetComponent<Animator>().SetBool("Attack", false);
         }
@@ -78,7 +79,7 @@ namespace UnityStandardAssets._2D {
             }
 
             // If the player should attack...
-            if (attack) {
+            if (attack && !AttackAnimation) {
                 AttackAnimation = true;
                 Attacking = true;
                 GetComponent<Animator>().SetBool("Attack", true);
