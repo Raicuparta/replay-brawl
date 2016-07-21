@@ -7,25 +7,24 @@ namespace UnityStandardAssets._2D
     [RequireComponent(typeof (PlatformerCharacter2D))]
     public class Platformer2DUserControl : MonoBehaviour
     {
-        private PlatformerCharacter2D m_Character;
-        private bool m_Jump;
-        private bool m_Attack;
+        [Range(0,1)]
+        public float JumpThreshold = 0.5f; // How much you need to move the joystick up to trigger a jump
+        private PlatformerCharacter2D Character;
+        private bool Attack;
+        private float PrevJoyV = 0;
 
 
         private void Awake()
         {
-            m_Character = GetComponent<PlatformerCharacter2D>();
+            Character = GetComponent<PlatformerCharacter2D>();
         }
 
 
         private void Update()
         {                
             // Read button inputs in Update so presses aren't missed.
-            if (!m_Jump)
-                m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
-
-            if (!m_Attack)
-                m_Attack = CrossPlatformInputManager.GetButtonDown("Fire1");
+            if (!Attack)
+                Attack = CrossPlatformInputManager.GetButtonDown("Fire1");
         }
 
 
@@ -34,14 +33,19 @@ namespace UnityStandardAssets._2D
             // Read the inputs.
 
             float h = CrossPlatformInputManager.GetAxis("Horizontal");
+            float v = CrossPlatformInputManager.GetAxis("Vertical");
+            // Use the analog stick to jump
+            bool j = v > JumpThreshold;
+            bool jump = j && PrevJoyV <= JumpThreshold;
+            PrevJoyV = v;
+
             // Pass all parameters to the character control script.
-            m_Character.Move(h, m_Attack, m_Jump);
-            m_Jump = false;
-            m_Attack = false;
+            Character.Move(h, Attack, jump);
+            Attack = false;
         }
 
         public bool GetAttack() {
-            return m_Attack;
+            return Attack;
         }
     }
 }
