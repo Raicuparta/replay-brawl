@@ -17,6 +17,7 @@ namespace UnityStandardAssets._2D {
         private Transform GroundCheck;    // A position marking where to check if the player is grounded.
         const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
         private bool Grounded;            // Whether or not the player is grounded.
+        private bool AttackAnimation;
         private bool Attacking;
         private Transform CeilingCheck;   // A position marking where to check for ceilings
         const float k_CeilingRadius = .01f; // Radius of the overlap circle to determine if the player can stand up
@@ -39,12 +40,13 @@ namespace UnityStandardAssets._2D {
                     Grounded = true;
             }
 
-            if (Attacking) Attack();
+            if (AttackAnimation) Attack();
         }
 
         void OnTriggerStay2D(Collider2D collider) {
             // Register hit
             if (Attacking && collider.tag == "Opponent") {
+                Attacking = false;
                 collider.GetComponent<HealthManager>().Hit();
             }
         }
@@ -56,7 +58,7 @@ namespace UnityStandardAssets._2D {
         }
 
         public void EndAttack() {
-            Attacking = false;
+            AttackAnimation = false;
             CurrentAttackTime = 0;
             GetComponent<Animator>().SetBool("Attack", false);
         }
@@ -77,6 +79,7 @@ namespace UnityStandardAssets._2D {
 
             // If the player should attack...
             if (attack) {
+                AttackAnimation = true;
                 Attacking = true;
                 GetComponent<Animator>().SetBool("Attack", true);
             }
