@@ -25,7 +25,8 @@ public class ServicesManager : MonoBehaviour {
             if (success) {
                 Debug.Log("Login Success");
                 // Activate menu buttons that require login
-                foreach (Transform child in transform) {
+                Transform menu = GameObject.Find("Canvas").transform; // TODO maybe move the menu stuff somewhere else
+                foreach (Transform child in menu) {
                     Button button = child.GetComponent<Button>();
                     if (child.name == "Login") {
                         // Show user name instead of Login button
