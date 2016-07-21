@@ -45,6 +45,13 @@ public class Capture : MonoBehaviour {
         }
     }
 
+    void OnTriggerStay2D(Collider2D collider) {
+        // TODO
+        // Register hit
+        /*if (Attacking && collider.tag == "Opponent")
+            collider.GetComponent<HealthManager>().Hit();*/
+    }
+
     public override string ToString() {
         string result = "";
 

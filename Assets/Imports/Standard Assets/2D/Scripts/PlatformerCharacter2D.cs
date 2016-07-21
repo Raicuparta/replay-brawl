@@ -14,7 +14,6 @@ namespace UnityStandardAssets._2D {
         [SerializeField]
         private int AttackDuration = 10;                          // How many ticks the attack animation lasts
         private int CurrentAttackTime = 0;
-
         private Transform GroundCheck;    // A position marking where to check if the player is grounded.
         const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
         private bool Grounded;            // Whether or not the player is grounded.
@@ -43,13 +42,23 @@ namespace UnityStandardAssets._2D {
             if (Attacking) Attack();
         }
 
+        void OnTriggerStay2D(Collider2D collider) {
+            // Register hit
+            if (Attacking && collider.tag == "Opponent") {
+                collider.GetComponent<HealthManager>().Hit();
+            }
+        }
+
         public void Attack() {
             CurrentAttackTime++;
-            if (CurrentAttackTime > AttackDuration) {
-                Attacking = false;
-                CurrentAttackTime = 0;
-                GetComponent<Animator>().SetBool("Attack", false);
-            }
+            if (CurrentAttackTime > AttackDuration)
+                EndAttack();
+        }
+
+        public void EndAttack() {
+            Attacking = false;
+            CurrentAttackTime = 0;
+            GetComponent<Animator>().SetBool("Attack", false);
         }
 
         public void Move(float move, bool attack, bool jump) {
