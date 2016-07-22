@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi.Multiplayer;
 
@@ -18,6 +19,12 @@ public class PlayGui : MonoBehaviour {
 
     void Start() {
         LaunchMatch(ServicesManager.Match);
+    }
+
+    void Update() {
+        if (Input.GetKey(KeyCode.Escape)) {
+            SceneManager.LoadScene("Menu");
+        }
     }
 
     private void Reset() {
