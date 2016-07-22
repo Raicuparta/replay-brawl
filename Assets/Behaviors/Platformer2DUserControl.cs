@@ -1,3 +1,4 @@
+using CnControls;
 using System;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
@@ -22,7 +23,7 @@ public class Platformer2DUserControl : MonoBehaviour
     {                
         // Read button inputs in Update so presses aren't missed.
         if (!Attack)
-            Attack = CrossPlatformInputManager.GetButtonDown("Fire1");
+            Attack = CnInputManager.GetButtonDown("Attack");
     }
 
 
@@ -30,8 +31,8 @@ public class Platformer2DUserControl : MonoBehaviour
     {
         // Read the inputs.
 
-        float h = CrossPlatformInputManager.GetAxis("Horizontal");
-        float v = CrossPlatformInputManager.GetAxis("Vertical");
+        float h = CnInputManager.GetAxis("Horizontal");
+        float v = CnInputManager.GetAxis("Vertical");
         // Use the analog stick to jump
         bool j = v > JumpThreshold;
         bool jump = j && PrevJoyV <= JumpThreshold;

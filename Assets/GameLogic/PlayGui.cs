@@ -44,7 +44,8 @@ public class PlayGui : MonoBehaviour {
         mMatch = match;
 
         if (mMatch == null) {
-            throw new System.Exception("PlayGui can't be started without a match!");
+            Debug.Log("PlayGui can't be started without a match!");
+            return;
         }
         try {
             // Note that mMatch.Data might be null (when we are starting a new match).

@@ -98,7 +98,7 @@ public class ServicesManager : MonoBehaviour {
 
         Debug.Log("Match started");
         Match = match;
-        SceneManager.LoadScene("TicTacToss");
+        SceneManager.LoadScene("Stage");
     }
 
     protected void OnGotInvitation(Invitation invitation, bool shouldAutoAccept) {
