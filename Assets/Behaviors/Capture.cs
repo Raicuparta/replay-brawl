@@ -5,11 +5,13 @@ using System.Collections.Generic;
 public class Capture : MonoBehaviour {
     public bool Recording = false;
     public bool Replaying = false;
+    public string DebugSteps;
 
-    Rigidbody2D Body;
-    PlatformerCharacter2D Player;
-    Platformer2DUserControl PlayerControl;
-    Vector2 StartPosition;
+    private Rigidbody2D Body;
+    private PlatformerCharacter2D Player;
+    private Platformer2DUserControl PlayerControl;
+    private Vector2 StartPosition;
+    private Attack OpponentAttack;
 
     [System.NonSerialized]
     public List<Vector3> Steps;
@@ -22,26 +24,39 @@ public class Capture : MonoBehaviour {
         Player = GetComponent<PlatformerCharacter2D>();
         PlayerControl = GetComponent<Platformer2DUserControl>();
         StartPosition = Body.position;
+        OpponentAttack = GetComponent<Attack>();
+    }
+
+    void Start() {
+        if (DebugSteps != "") {
+            ReadFromString(DebugSteps);
+            Replaying = true;
+        }
     }
 
     void FixedUpdate() {
         if (Recording || Replaying) TickCount++;
+        if (Recording && PlayerControl) Record();
+        if (Replaying) Replay();
+    }
 
-        if (Recording && PlayerControl) {
-            float attack = PlayerControl.GetAttack() ? 1 : 0;
-            Vector3 position = new Vector3(Body.position.x, Body.position.y, attack);
-            Steps.Add(position);
-        }
+    void Record() {
+        float attack = PlayerControl.GetAttack() ? 1 : 0;
+        Vector3 position = new Vector3(Body.position.x, Body.position.y, attack);
+        Steps.Add(position);
+    }
 
-        if (Replaying) {
-            if (Recording) {
-                ToString();
-                TickCount = 0;
-                Recording = false;
-            }
-            if (TickCount >= Steps.Count) return;
-            Body.position = Steps[TickCount];
+    void Replay() {
+        if (Recording) {
+            ToString();
+            TickCount = 0;
+            Recording = false;
+            ToString();
         }
+        if (TickCount >= Steps.Count) return;
+        Body.position = Steps[TickCount];
+        if (Steps[TickCount].z != 0) OpponentAttack.TriggerAttack();
+
     }
 
     void OnTriggerStay2D(Collider2D collider) {
@@ -64,12 +79,12 @@ public class Capture : MonoBehaviour {
     private static string VectorToString(Vector3 vector) {
         string result = "" + vector.x + "," + vector.y;
         if (vector.z != 0) result += "," + vector.z;
-        Debug.Log("####### VectorToString: " + result);
+        //Debug.Log("####### VectorToString: " + result);
         return result;
     }
 
     private Vector3 StringToVector(string s) {
-        Debug.Log("####### StringToVector: " + s);
+        //Debug.Log("####### StringToVector: " + s);
         if (s.Length == 0) return Vector3.zero; // TODO deal with this
 
         Vector3 v = new Vector3();

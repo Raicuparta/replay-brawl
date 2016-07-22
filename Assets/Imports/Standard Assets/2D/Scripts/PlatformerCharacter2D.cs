@@ -11,23 +11,20 @@ namespace UnityStandardAssets._2D {
         private bool AirControl = false;                 // Whether or not a player can steer while jumping;
         [SerializeField]
         private LayerMask WhatIsGround;                  // A mask determining what is ground to the character
-        [SerializeField]
-        private int AttackDuration = 10;                          // How many ticks the attack animation lasts
-        private int CurrentAttackTime = 0;
         private Transform GroundCheck;    // A position marking where to check if the player is grounded.
         const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
         private bool Grounded;            // Whether or not the player is grounded.
-        private bool AttackAnimation;
-        private bool Attacking;
         private Transform CeilingCheck;   // A position marking where to check for ceilings
         const float k_CeilingRadius = .01f; // Radius of the overlap circle to determine if the player can stand up
         private Rigidbody2D Rigidbody2D;
+        private Attack PlayerAttack;
 
         private void Awake() {
             // Setting up references.
             GroundCheck = transform.Find("GroundCheck");
             CeilingCheck = transform.Find("CeilingCheck");
             Rigidbody2D = GetComponent<Rigidbody2D>();
+            PlayerAttack = GetComponent<Attack>();
         }
 
         private void FixedUpdate() {
@@ -39,29 +36,6 @@ namespace UnityStandardAssets._2D {
                 if (colliders[i].gameObject != gameObject)
                     Grounded = true;
             }
-
-            if (AttackAnimation) Attack();
-        }
-
-        void OnTriggerStay2D(Collider2D collider) {
-            // Register hit
-            if (Attacking && collider.tag == "Opponent") {
-                Attacking = false;
-                collider.GetComponent<HealthManager>().Hit();
-            }
-        }
-
-        public void Attack() {
-            CurrentAttackTime++;
-            if (CurrentAttackTime > AttackDuration)
-                EndAttack();
-        }
-
-        public void EndAttack() {
-            AttackAnimation = false;
-            Attacking = false;
-            CurrentAttackTime = 0;
-            GetComponent<Animator>().SetBool("Attack", false);
         }
 
         public void Move(float move, bool attack, bool jump) {
@@ -79,10 +53,8 @@ namespace UnityStandardAssets._2D {
             }
 
             // If the player should attack...
-            if (attack && !AttackAnimation) {
-                AttackAnimation = true;
-                Attacking = true;
-                GetComponent<Animator>().SetBool("Attack", true);
+            if (attack) {
+                PlayerAttack.TriggerAttack();
             }
         }
     }
