@@ -62,7 +62,8 @@ public class ServicesManager : MonoBehaviour {
     public void Logout() {
         PlayGamesPlatform.Instance.SignOut();
         Debug.Log("Logged out");
-        foreach (Transform child in transform) {
+        Transform menu = GameObject.Find("Canvas").transform;
+        foreach (Transform child in menu) {
             Button button = child.GetComponent<Button>();
             if (child.name == "Login") {
                 // Change the login button back to its original state

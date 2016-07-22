@@ -16,8 +16,7 @@ public class Capture : MonoBehaviour {
     [System.NonSerialized]
     public int TickCount = 0;
 
-    // Use this for initialization
-    void Start() {
+    void Awake() {
         Steps = new List<Vector3>();
         Body = GetComponent<Rigidbody2D>();
         Player = GetComponent<PlatformerCharacter2D>();
