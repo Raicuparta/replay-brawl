@@ -9,6 +9,10 @@ public class PauseMenu : MonoBehaviour {
     const string VictoryTitle = "Victory!";
     const string DefeatTitle = "Defeat :(";
     string DefaultTitle;
+    [SerializeField]
+    HealthManager Player;
+    [SerializeField]
+    HealthManager Opponent;
 
     Canvas Menu;
 
@@ -16,6 +20,11 @@ public class PauseMenu : MonoBehaviour {
         Menu = GetComponent<Canvas>();
         Title = transform.Find("Title").GetComponent<Text>();
         DefaultTitle = Title.text;
+    }
+
+    void FixedUpdate() {
+        if (Player.IsDead()) Defeat();
+        else if (Opponent.IsDead()) Victory();
     }
 
     void Show(string title) {

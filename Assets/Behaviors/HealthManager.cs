@@ -2,13 +2,16 @@
 using System.Collections;
 
 public class HealthManager : MonoBehaviour {
+    int Health;
+    bool Dead;
+    [SerializeField]
+    int InitialHealth = 100;
+    [SerializeField]
+    int HealthDecrement = 10; // Amount of health to remove when receiving an attack
 
-    private int Health = 100;
-    private bool Dead;
-    [SerializeField]
-    private int InitialHealth = 100;
-    [SerializeField]
-    private int HealthDecrement = 10; // Amount of health to remove when receiving an attack
+    void Start() {
+        Health = InitialHealth;
+    }
 
     public void Hit() {
         if (Dead) return;
@@ -18,6 +21,11 @@ public class HealthManager : MonoBehaviour {
     }
 
     private void Death() {
+        Dead = true;
         Debug.Log("Someone died");
+    }
+
+    public bool IsDead() {
+        return Dead;
     }
 }
