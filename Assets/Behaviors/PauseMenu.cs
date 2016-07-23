@@ -14,7 +14,7 @@ public class PauseMenu : MonoBehaviour {
     [SerializeField]
     HealthManager Opponent;
     [SerializeField]
-    PlayGui GameManager;
+    GameManager GameManager;
 
     Canvas Menu;
 

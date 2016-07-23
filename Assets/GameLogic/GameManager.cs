@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi.Multiplayer;
 
-public class PlayGui : MonoBehaviour {
+public class GameManager : MonoBehaviour {
     public Capture Player;
     public Capture Opponent;
     public PauseMenu Menu;
@@ -25,7 +25,6 @@ public class PlayGui : MonoBehaviour {
     void Update() {
         if (Input.GetKeyDown(KeyCode.Escape)) {
             // TODO actually pause
-            EndTurn();
             Menu.Toggle();
         }
     }
@@ -47,7 +46,7 @@ public class PlayGui : MonoBehaviour {
         mMatch = match;
 
         if (mMatch == null) {
-            Debug.Log("PlayGui can't be started without a match!");
+            Debug.Log("GameManager can't be started without a match!");
             return;
         }
         try {
