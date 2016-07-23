@@ -9,6 +9,8 @@ public class LevelLoader : MonoBehaviour
 {
     public TextAsset level_JSON;
     public float scale = 1;
+    public int TileLayer;
+    public PhysicsMaterial2D TileMaterial;
 
     GameObject _tiles;
     GameObject _boundaries;
@@ -149,9 +151,14 @@ public class LevelLoader : MonoBehaviour
         // Instantiate a new tile
         GameObject newTile = new GameObject();
         newTile.name = "Tile";
+        // Change layer to user defined one
+        newTile.layer = TileLayer;
         newTile.AddComponent<BoxCollider2D>();
+        BoxCollider2D collider = newTile.GetComponent<BoxCollider2D>();
+        // Change physics material to user defined one
+        collider.sharedMaterial = TileMaterial;
         // Set the size of the boxcollider to the correct unity-unit tilesize.
-        newTile.GetComponent<BoxCollider2D>().size = TileUnitySize;
+        collider.size = TileUnitySize;
         newTile.transform.position = new Vector2(xIndex * TileUnitySize.x, yIndex * TileUnitySize.y);
 
         // Put the new tile under our _tiles folder.
@@ -328,6 +335,11 @@ public class LevelLoader : MonoBehaviour
         {
             levelTiles[(int)p.y, (int)p.x] = mergedBlock;
         }
+
+        // Change layer to user defined one
+        mergedBlock.layer = TileLayer;
+        // Change material to user defined one
+        mergedBlock.GetComponent<BoxCollider2D>().sharedMaterial = TileMaterial;
 
         // Destroy the old 2 tiles
         DestroyImmediate(a.gameObject);
