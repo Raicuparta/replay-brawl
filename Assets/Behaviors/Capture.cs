@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class Capture : MonoBehaviour {
     public bool Recording = false;
     public bool Replaying = false;
+
+    public bool DebugOn;
     public string DebugSteps;
 
     private Rigidbody2D Body;
@@ -28,7 +30,7 @@ public class Capture : MonoBehaviour {
     }
 
     void Start() {
-        if (DebugSteps != "") {
+        if (DebugOn) {
             ReadFromString(DebugSteps);
             Replaying = true;
         }

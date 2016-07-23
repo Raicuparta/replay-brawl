@@ -25,6 +25,7 @@ public class PlayGui : MonoBehaviour {
     void Update() {
         if (Input.GetKeyDown(KeyCode.Escape)) {
             // TODO actually pause
+            EndTurn();
             Menu.Toggle();
         }
     }
@@ -132,7 +133,7 @@ public class PlayGui : MonoBehaviour {
         }
     }
 
-    void EndTurn() {
+    public void EndTurn() {
         mEndingTurn = true;
 
         // do we have a winner?

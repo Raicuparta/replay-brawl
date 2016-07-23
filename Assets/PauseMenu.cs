@@ -13,6 +13,8 @@ public class PauseMenu : MonoBehaviour {
     HealthManager Player;
     [SerializeField]
     HealthManager Opponent;
+    [SerializeField]
+    PlayGui GameManager;
 
     Canvas Menu;
 
@@ -54,10 +56,12 @@ public class PauseMenu : MonoBehaviour {
     }
 
     public void Exit() {
+        GameManager.EndTurn();
         SceneManager.LoadScene("Menu");
     }
 
     public void NextRound() {
+        GameManager.EndTurn();
         // TODO
     }
 }
