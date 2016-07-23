@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Collections;
 using System;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using System.IO;
 
 public class LevelLoader : MonoBehaviour
@@ -48,6 +50,7 @@ public class LevelLoader : MonoBehaviour
     /// <param name="levelFile">The .json file we would like to load from.</param>
     public void LoadFile(TextAsset levelFile)
     {
+        #if UNITY_EDITOR
         // Check if the levelFile isn't null.
         if (levelFile == null)
         {
@@ -105,6 +108,7 @@ public class LevelLoader : MonoBehaviour
         {
             levelIndexes[i / (int)LevelGridSize.x, i % (int)LevelGridSize.x] = TiledLevel.layers[0].data[i];
         }
+        #endif
     }
 
     /// <summary>
@@ -139,7 +143,7 @@ public class LevelLoader : MonoBehaviour
         AddBoundaries(LevelUnitySize.x, LevelUnitySize.y);
     }
 
-    #region Tile Loaders
+#region Tile Loaders
 
     /// <summary>
     /// Load a solid block the player cannot pass through.
@@ -171,7 +175,7 @@ public class LevelLoader : MonoBehaviour
         levelTiles[yIndex, xIndex] = newTile;
     }
 
-    #endregion
+#endregion
 
     /// <summary>
     /// Add the boundaries of the level.
@@ -205,7 +209,7 @@ public class LevelLoader : MonoBehaviour
         allChildren.ForEach(child => DestroyImmediate(child));
     }
 
-    #region Optimization
+#region Optimization
 
     /// <summary>
     /// Remove redundant blocks, gather chunks of blocks together.
@@ -412,9 +416,9 @@ public class LevelLoader : MonoBehaviour
         }
     }
 
-    #endregion
+#endregion
 
-    #region Level Drawing
+#region Level Drawing
 
     /// <summary>
     /// Create a single texture for all the blocks placed in the level to save processing power.
@@ -481,9 +485,9 @@ public class LevelLoader : MonoBehaviour
         }
     }
 
-    #endregion
+#endregion
 
-    #region Properties
+#region Properties
 
     /// <summary>
     /// The size of a single tile converted to Unity's size units.
@@ -539,5 +543,5 @@ public class LevelLoader : MonoBehaviour
         set;
     }
 
-    #endregion
+#endregion
 }
