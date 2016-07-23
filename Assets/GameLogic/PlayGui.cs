@@ -6,6 +6,7 @@ using GooglePlayGames.BasicApi.Multiplayer;
 public class PlayGui : MonoBehaviour {
     public Capture Player;
     public Capture Opponent;
+    public PauseMenu Menu;
 
     private TurnBasedMatch mMatch = null;
     private MatchData mMatchData = null;
@@ -22,8 +23,9 @@ public class PlayGui : MonoBehaviour {
     }
 
     void Update() {
-        if (Input.GetKey(KeyCode.Escape)) {
-            SceneManager.LoadScene("Menu");
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            // TODO actually pause
+            Menu.Toggle();
         }
     }
 
