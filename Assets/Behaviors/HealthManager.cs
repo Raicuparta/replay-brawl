@@ -3,7 +3,7 @@ using System.Collections;
 
 public class HealthManager : MonoBehaviour {
     int Health;
-    bool Dead;
+    bool Dead = false;
     [SerializeField]
     int InitialHealth = 100;
     [SerializeField]

@@ -9,6 +9,7 @@ public class PauseMenu : MonoBehaviour {
     const string VictoryTitle = "Victory!";
     const string DefeatTitle = "Defeat :(";
     string DefaultTitle;
+    bool FinishedTurn = false;
     [SerializeField]
     HealthManager Player;
     [SerializeField]
@@ -35,7 +36,8 @@ public class PauseMenu : MonoBehaviour {
     }
 
     void Hide() {
-        Menu.enabled = false;
+        if (!Player.IsDead() && !Opponent.IsDead())
+            Menu.enabled = false;
     }
 
     public void Toggle() {
@@ -48,20 +50,21 @@ public class PauseMenu : MonoBehaviour {
     }
 
     public void Victory() {
+        FinishedTurn = true;
         Show(VictoryTitle);
     }
 
     public void Defeat() {
+        FinishedTurn = true;
         Show(DefeatTitle);
     }
 
     public void Exit() {
-        GameManager.EndTurn();
+        if (FinishedTurn) {
+            GameManager.EndTurn();
+        } else {
+            GameManager.Cancel();
+        }
         SceneManager.LoadScene("Menu");
-    }
-
-    public void NextRound() {
-        GameManager.EndTurn();
-        // TODO
     }
 }

@@ -77,10 +77,10 @@ public class GameManager : MonoBehaviour {
         if (mMatch.Status == TurnBasedMatch.MatchStatus.Complete) {
             PlayGamesPlatform.Instance.TurnBased.AcknowledgeFinished(mMatch,
                     (bool success) => {
-                if (!success) {
-                    Debug.LogError("Error acknowledging match finish.");
-                }
-            });
+                        if (!success) {
+                            Debug.LogError("Error acknowledging match finish.");
+                        }
+                    });
         }
 
         // set up the objects to show the match to the player
@@ -115,8 +115,7 @@ public class GameManager : MonoBehaviour {
         if (replay != null) {
             Opponent.ReadFromString(mMatchData.Replay);
             Opponent.Replaying = true;
-        }
-        else {
+        } else {
             Opponent.gameObject.SetActive(false);
         }
     }
@@ -166,11 +165,11 @@ public class GameManager : MonoBehaviour {
         // finish the match
         //SetStandBy("Sending...");
         PlayGamesPlatform.Instance.TurnBased.Finish(mMatch, mMatchData.ToBytes(),
-                    outcome, (bool success) => {
-            //EndStandBy();
-            mFinalMessage = success ? (winnerIsMe ? "YOU WON!" : "YOU LOST!") :
-                "ERROR finishing match.";
-        });
+            outcome, (bool success) => {
+                //EndStandBy();
+                Debug.Log(success ? (winnerIsMe ? "YOU WON!" : "YOU LOST!") :
+                "ERROR finishing match.");
+            });
     }
 
     void TakeTurn() {
@@ -178,9 +177,17 @@ public class GameManager : MonoBehaviour {
         mMatchData.Replay = Player.ToString();
 
         PlayGamesPlatform.Instance.TurnBased.TakeTurn(mMatch, mMatchData.ToBytes(),
-                    DecideNextToPlay(), (bool success) => {
-            //EndStandBy();
-            mFinalMessage = success ? "Done for now!" : "ERROR sending turn.";
-        });
+            DecideNextToPlay(), (bool success) => {
+                //EndStandBy();
+                Debug.Log(success ? "Turn taken" : "Error taking turn");
+            });
+    }
+
+    public void Cancel() {
+        PlayGamesPlatform.Instance.TurnBased.Cancel(mMatch,
+            (bool success) => {
+                //EndStandBy();
+                Debug.Log(success ? "Cancelled" : "Error cancelling");
+            });
     }
 }
