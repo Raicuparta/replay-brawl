@@ -1,0 +1,41 @@
+1. Create a level in tiled.
+	- Make sure you import a tileset that is present in your Unity project.
+
+2. Export the level as .JSON to Unity
+	- Make sure you export it as .JSON since the loader will only accept JSON files.
+	- Place the level somewhere in your Unity project.
+
+3. Make an empty object and add the "Level Loader" component
+	- This will add the level loading functionality to that object.
+	- The level generated will become a child of that object.
+
+4. Make sure the tileset inside the unity project is read/write enabled.
+	- Select the tileset sprite in your project.
+	- Choose texture type "Advanced".
+	- Tick the Read/Write Enabled checkbox.
+
+5. Load the .JSON level file with the level loader.
+	- Drag the file into the Level_JSON field of the level loader.
+	- Click "Load Level" to load the level.
+	- Click "Clear Level" to remove the level.
+
+-----------------------------------------------------------------------------------------------
+COMMON ISSUES
+-----------------------------------------------------------------------------------------------
+
+===Error===
+"Texture 'XXX' is not readable, the texture memory can not be accessed from scripts. You can make the texture readable in the Texture Import Settings."
+===Fix===
+See step 4. You should enable read/write on the texture.
+
+===Error===
+"The tileset could not be found at: -PATH-"
+===Fix===
+The issue here is that the tileset texture could not be found by Unity. Make sure the level you loaded actually uses the tileset in your Unity folder. 
+The relative path from the level file to the tileset you used inside tiled is saved in the JSON file. This reference is used to locate the tileset for the loaded level. 
+If you imported a tileset outside of the Unity folder, then it cannot be found by the script.
+
+===Error===
+"'XXX' is not a JSON file!"
+===Fix===
+Make sure the file you exported from tiled is a .JSON file. The loader will only accept JSON files.

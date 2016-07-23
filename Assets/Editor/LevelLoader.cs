@@ -459,13 +459,11 @@ public class LevelLoader : MonoBehaviour
         }
         else
         {
-            int xIndex, yIndex;
+            int xIndex = 0, yIndex = 0;
             try {
                 xIndex = (tileType - 1) % TiledLevel.tilesets[0].columns;
                 yIndex = (tileType - 1) / TiledLevel.tilesets[0].columns;
-            } catch (DivideByZeroException e) {
-                xIndex = yIndex = 0;
-            }
+            } catch (DivideByZeroException e) { }
 
             return Tileset.GetPixels(xIndex * (int)TilePixelSize.x, (int)TilePixelSize.y - (yIndex * (int)TilePixelSize.y), (int)TilePixelSize.x, (int)TilePixelSize.y);
         }
