@@ -124,4 +124,14 @@ public class GameManager : MonoBehaviour {
                 Debug.Log(success ? "Cancelled" : "Error cancelling");
             });
     }
+
+    public Collectible GetStageObject(int id) {
+        Transform objects = transform.Find("Objects");
+        foreach (Transform child in objects) {
+            Collectible collectible = child.GetComponent<Collectible>();
+            if (collectible.GetId() == id)
+                return collectible;
+        }
+        return null;
+    }
 }

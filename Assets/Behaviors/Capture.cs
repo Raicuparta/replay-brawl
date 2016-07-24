@@ -14,27 +14,31 @@ public class Capture : MonoBehaviour {
     Platformer2DUserControl PlayerControl;
     Vector2 StartPosition;
     Attack OpponentAttack;
+    int LastCollected = -1;
     int Score = 0;
 
+    [SerializeField]
+    GameManager Manager;
+
     [System.NonSerialized]
-    public List<Vector3> Steps;
+    public List<Step> Steps;
     [System.NonSerialized]
     public int TickCount = 0;
 
+    public struct Step {
+        public float x;
+        public float y;
+        public bool attack;
+        public int collect;
+    }
+
     void Awake() {
-        Steps = new List<Vector3>();
+        Steps = new List<Step>();
         Body = GetComponent<Rigidbody2D>();
         Player = GetComponent<PlatformerCharacter2D>();
         PlayerControl = GetComponent<Platformer2DUserControl>();
         StartPosition = Body.position;
         OpponentAttack = GetComponent<Attack>();
-    }
-
-    void Start() {
-        if (DebugOn) {
-            ReadFromString(DebugSteps);
-            Replaying = true;
-        }
     }
 
     void FixedUpdate() {
@@ -44,9 +48,13 @@ public class Capture : MonoBehaviour {
     }
 
     void Record() {
-        float attack = PlayerControl.GetAttack() ? 1 : 0;
-        Vector3 position = new Vector3(Body.position.x, Body.position.y, attack);
-        Steps.Add(position);
+        Step step = new Step();
+        step.x = Body.position.x;
+        step.y = Body.position.y;
+        step.attack = PlayerControl.GetAttack();
+        step.collect = LastCollected;
+        LastCollected = -1; // reset the collected item ID
+        Steps.Add(step);
     }
 
     void Replay() {
@@ -57,53 +65,10 @@ public class Capture : MonoBehaviour {
             ToString();
         }
         if (TickCount >= Steps.Count) return;
-        Body.position = Steps[TickCount];
-        if (Steps[TickCount].z != 0) OpponentAttack.TriggerAttack();
-
-    }
-
-    public override string ToString() {
-        string result = "";
-
-        for (int i = 0; i < Steps.Count; i++)
-            result += VectorToString(Steps[i]) + "|";
-
-        Debug.Log("####### ToString: " + result);
-        return result;
-    }
-
-    private static string VectorToString(Vector3 vector) {
-        string result = "" + vector.x + "," + vector.y;
-        if (vector.z != 0) result += "," + vector.z;
-        //Debug.Log("####### VectorToString: " + result);
-        return result;
-    }
-
-    private Vector3 StringToVector(string s) {
-        //Debug.Log("####### StringToVector: " + s);
-        if (s.Length == 0) return Vector3.zero; // TODO deal with this
-
-        Vector3 v = new Vector3();
-        string[] values = s.Split(',');
-        v.x = float.Parse(values[0]);
-        v.y = float.Parse(values[1]);
-        if (values.Length > 2)
-            v.z = float.Parse(values[2]);
-        else
-            v.z = 0;
-        return v;
-    }
-
-    public void ReadFromString(string data) {
-        Debug.Log("####### ReadFromString: " + data);
-        Steps.Clear();
-
-        string[] steps = data.Split('|');
-
-        for (int i = 0; i < steps.Length - 1; i++) {
-            Vector3 position = StringToVector(steps[i]);
-            Steps.Add(position);
-        }
+        Step step = Steps[TickCount];
+        Body.position = new Vector2(step.x, step.y);
+        if (step.attack) OpponentAttack.TriggerAttack();
+        if (step.collect != -1) Collect(step.collect); 
     }
 
     public void Reset() {
@@ -114,13 +79,18 @@ public class Capture : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other) {
         if (other.tag == "Collectible") {
-            Collect();
-            other.GetComponent<Collectible>().Collect();
+            Collectible collectible = other.GetComponent<Collectible>();
+            Collect(collectible.GetId());
+            collectible.Collect();
         }
     }
 
-    void Collect() {
+    void Collect(int id) {
         Score++;
         Debug.Log("Collected: " + Score);
+        if (Recording) LastCollected = id;
+        else if (Replaying) {
+            LastCollected = Manager.GetStageObject(id).GetId();
+        }
     }
 }
