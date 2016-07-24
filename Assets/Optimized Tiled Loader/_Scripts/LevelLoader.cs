@@ -13,12 +13,14 @@ public class LevelLoader : MonoBehaviour
     public float scale = 1;
     public int TileLayer;
     public PhysicsMaterial2D TileMaterial;
+    public GameObject GoalObject;
 
     GameObject _tiles;
     GameObject _boundaries;
 
     GameObject[,] levelTiles;
     int[,] levelIndexes;
+    int[,] objectIndexes;
     List<GameObject> realTiles;
 
     public void Start()
@@ -102,11 +104,13 @@ public class LevelLoader : MonoBehaviour
 
         // Create an array to hold int values for the different block types.
         levelIndexes = new int[(int)LevelGridSize.y, (int)LevelGridSize.x];
+        objectIndexes = new int[(int)LevelGridSize.y, (int)LevelGridSize.x];
 
         // Fill the level indexes with the data from the tiled level file.
         for (int i = 0; i < TiledLevel.layers[0].data.Length; i++)
         {
             levelIndexes[i / (int)LevelGridSize.x, i % (int)LevelGridSize.x] = TiledLevel.layers[0].data[i];
+            objectIndexes[i / (int)LevelGridSize.x, i % (int)LevelGridSize.x] = TiledLevel.layers[1].data[i];
         }
         #endif
     }
@@ -135,6 +139,16 @@ public class LevelLoader : MonoBehaviour
                         break;
                     default:
                         LoadDefaultTile(x, y, tileType);
+                        break;
+                }
+
+                int objectType = objectIndexes[y, x];
+                // This is where you attach logic to different tileTypes.
+                switch (objectType) {
+                    case 0:
+                        break;
+                    default:
+                        LoadObject(x, y, objectType);
                         break;
                 }
             }
@@ -173,6 +187,16 @@ public class LevelLoader : MonoBehaviour
         newTile.AddComponent<Block>();
         newTile.GetComponent<Block>().Initialize(xIndex, yIndex, false, tileType);
         levelTiles[yIndex, xIndex] = newTile;
+    }
+
+    void LoadObject(int xIndex, int yIndex, int tileType) {
+        Debug.Log("Loading Object");
+        Vector2 position = new Vector2(xIndex * TileUnitySize.x, yIndex * TileUnitySize.y);
+        GameObject newObject = (GameObject) Instantiate(GoalObject, position, Quaternion.identity);
+        // Put the new tile under our _tiles folder.
+        newObject.transform.SetParent(_tiles.transform);
+        // Place it at the correct position.
+        newObject.transform.localPosition = new Vector2(TileUnitySize.x * xIndex + TileUnitySize.x / 2, TileUnitySize.y * -yIndex - TileUnitySize.y / 2);
     }
 
 #endregion
