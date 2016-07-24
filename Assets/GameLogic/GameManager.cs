@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour {
     private TurnBasedMatch mMatch = null;
     private MatchData mMatchData = null;
     private string mFinalMessage = null;
-    private char mMyMark = '\0';
 
     private bool mEndingTurn = false;
 
@@ -19,7 +18,9 @@ public class GameManager : MonoBehaviour {
     private bool mShowInstructions = false;
 
     void Start() {
-        LaunchMatch(ServicesManager.Match);
+        mMatch = ServicesManager.Match;
+        mMatchData = ServicesManager.Data;
+        SetupObjects();
     }
 
     void Update() {
@@ -33,7 +34,6 @@ public class GameManager : MonoBehaviour {
         mMatch = null;
         mMatchData = null;
         mFinalMessage = null;
-        mMyMark = '\0';
         mEndingTurn = false;
         mShowInstructions = false;
         Opponent.gameObject.SetActive(true);
@@ -41,78 +41,11 @@ public class GameManager : MonoBehaviour {
         //Player.Reset();
     }
 
-    public void LaunchMatch(TurnBasedMatch match) {
-        Reset();
-        mMatch = match;
-
-        if (mMatch == null) {
-            Debug.Log("GameManager can't be started without a match!");
-            return;
-        }
-        try {
-            // Note that mMatch.Data might be null (when we are starting a new match).
-            // MatchData.MatchData() correctly deals with that and initializes a
-            // brand-new match in that case.
-            mMatchData = new MatchData(mMatch.Data);
-        } catch (MatchData.UnsupportedMatchFormatException ex) {
-            mFinalMessage = "Your game is out of date. Please update your game\n" +
-                "in order to play this match.";
-            Debug.LogWarning("Failed to parse board data: " + ex.Message);
-            return;
-        }
-
-        // determine if I'm the 'X' or the 'O' player
-        mMyMark = mMatchData.GetMyMark(match.SelfParticipantId);
-
-        bool canPlay = (mMatch.Status == TurnBasedMatch.MatchStatus.Active &&
-                mMatch.TurnStatus == TurnBasedMatch.MatchTurnStatus.MyTurn);
-
-        if (canPlay) {
-            mShowInstructions = true;
-        } else {
-            mFinalMessage = ExplainWhyICantPlay();
-        }
-
-        // if the match is in the completed state, acknowledge it
-        if (mMatch.Status == TurnBasedMatch.MatchStatus.Complete) {
-            PlayGamesPlatform.Instance.TurnBased.AcknowledgeFinished(mMatch,
-                    (bool success) => {
-                        if (!success) {
-                            Debug.LogError("Error acknowledging match finish.");
-                        }
-                    });
-        }
-
-        // set up the objects to show the match to the player
-        SetupObjects(canPlay);
-    }
-
-    private string ExplainWhyICantPlay() {
-        switch (mMatch.Status) {
-            case TurnBasedMatch.MatchStatus.Active:
-                break;
-            case TurnBasedMatch.MatchStatus.Complete:
-                return mMatchData.Winner == mMyMark ? "Match finished. YOU WIN!" :
-                        "Match finished. YOU LOST!";
-            case TurnBasedMatch.MatchStatus.Cancelled:
-            case TurnBasedMatch.MatchStatus.Expired:
-                return "This match was cancelled.";
-            case TurnBasedMatch.MatchStatus.AutoMatching:
-                return "This match is awaiting players.";
-            default:
-                return "This match can't continue due to an error.";
-        }
-
-        if (mMatch.TurnStatus != TurnBasedMatch.MatchTurnStatus.MyTurn) {
-            return "It's not your turn yet!";
-        }
-
-        return "Error";
-    }
-
-    private void SetupObjects(bool canPlay) {
+    private void SetupObjects() {
         string replay = mMatchData.Replay;
+        Debug.Log("Setup Objects");
         if (replay != null) {
+            Debug.Log("Read opponent data");
             Opponent.ReadFromString(mMatchData.Replay);
             Opponent.Replaying = true;
         } else {
@@ -153,7 +86,8 @@ public class GameManager : MonoBehaviour {
     }
 
     void FinishMatch() {
-        bool winnerIsMe = mMatchData.Winner == mMyMark;
+        // bool winnerIsMe = mMatchData.Winner == mMyMark;
+        bool winnerIsMe = false;
 
         // define the match's outcome
         MatchOutcome outcome = new MatchOutcome();

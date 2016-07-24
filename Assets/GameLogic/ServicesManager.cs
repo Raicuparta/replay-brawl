@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class ServicesManager : MonoBehaviour {
     public static TurnBasedMatch Match;
+    public static MatchData Data;
 
     bool AuthOnStart = true;
     System.Action<bool> AuthCallback;
@@ -97,7 +98,44 @@ public class ServicesManager : MonoBehaviour {
         }
 
         Debug.Log("Match started");
+
+        if (match == null) {
+            Debug.Log("Game can't be started without a match!");
+            return;
+        }
+
         Match = match;
+
+        try {
+            // Note that mMatch.Data might be null (when we are starting a new match).
+            // MatchData.MatchData() correctly deals with that and initializes a
+            // brand-new match in that case.
+            Data = new MatchData(match.Data);
+        } catch (MatchData.UnsupportedMatchFormatException ex) {
+            Debug.LogWarning("Your game is out of date. Please update your game\n" +
+                "in order to play this match.");
+            Debug.LogWarning("Failed to parse board data: " + ex.Message);
+            return;
+        }
+
+        bool canPlay = (match.Status == TurnBasedMatch.MatchStatus.Active &&
+                match.TurnStatus == TurnBasedMatch.MatchTurnStatus.MyTurn);
+
+        if (!canPlay) {
+            Debug.Log(ExplainWhyICantPlay(match));
+            return;
+        }
+
+        // if the match is in the completed state, acknowledge it
+        if (match.Status == TurnBasedMatch.MatchStatus.Complete) {
+            PlayGamesPlatform.Instance.TurnBased.AcknowledgeFinished(match,
+                    (bool s) => {
+                        if (!s) {
+                            Debug.LogError("Error acknowledging match finish.");
+                        }
+                    });
+        }
+
         SceneManager.LoadScene("Stage");
     }
 
@@ -112,5 +150,27 @@ public class ServicesManager : MonoBehaviour {
     protected void OnGotMatch(TurnBasedMatch match, bool shouldAutoLaunch) {
         Debug.Log("Got match");
         // TODO
+    }
+
+    private string ExplainWhyICantPlay(TurnBasedMatch match) {
+        switch (match.Status) {
+            case TurnBasedMatch.MatchStatus.Active:
+                break;
+            case TurnBasedMatch.MatchStatus.Complete:
+                return "Match finished";
+            case TurnBasedMatch.MatchStatus.Cancelled:
+            case TurnBasedMatch.MatchStatus.Expired:
+                return "This match was cancelled.";
+            case TurnBasedMatch.MatchStatus.AutoMatching:
+                return "This match is awaiting players.";
+            default:
+                return "This match can't continue due to an error.";
+        }
+
+        if (match.TurnStatus != TurnBasedMatch.MatchTurnStatus.MyTurn) {
+            return "It's not your turn yet!";
+        }
+
+        return "Error";
     }
 }
