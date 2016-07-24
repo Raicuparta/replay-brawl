@@ -34,7 +34,7 @@ public class MatchData {
         new char[] { MarkNone, MarkNone, MarkNone }
     };
 
-    public string Replay;
+    public List<Vector3> Steps;
 
     private List<BlockDesc> mBlockDescs = new List<BlockDesc>();
 
@@ -161,18 +161,25 @@ public class MatchData {
         }
     }
 
-    public byte[] ToBytes() {
+    public byte[] ToBytes(List<Vector3> steps) {
         MemoryStream memStream = new MemoryStream();
         BinaryWriter w = new BinaryWriter(memStream);
         w.Write(Header);
         w.Write((byte)mParticipantIdX.Length);
         w.Write(mParticipantIdX.ToCharArray());
 
-        w.Write(Replay);
 
+        // Write player steps
+        w.Write(steps.Count);
+        foreach (Vector3 v in steps) {
+            w.Write(v.x);
+            w.Write(v.y);
+            w.Write(v.z);
+        }
         w.Close();
         byte[] buf = memStream.GetBuffer();
         memStream.Close();
+        Debug.Log("Buffer size: " + buf.Length);
         return buf;
     }
 
@@ -188,7 +195,17 @@ public class MatchData {
         int len = (int)r.ReadByte();
         mParticipantIdX = new string(r.ReadChars(len));
 
-        Replay = r.ReadString();
+        // Get the number of steps
+        int nSteps = (int)r.ReadInt32();
+        Debug.Log("Read nSteps: " + nSteps);
+        Steps = new List<Vector3>();
+
+        for (int i = 0; i < nSteps; i++) {
+            float x = r.ReadSingle();
+            float y = r.ReadSingle();
+            float z = r.ReadSingle();
+            Steps.Add(new Vector3(x, y, z));
+        }
     }
 
     public char GetMyMark(string myParticipantId) {

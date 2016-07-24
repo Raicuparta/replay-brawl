@@ -42,11 +42,10 @@ public class GameManager : MonoBehaviour {
     }
 
     private void SetupObjects() {
-        string replay = mMatchData.Replay;
         Debug.Log("Setup Objects");
-        if (replay != null) {
+        if (mMatchData.Steps != null) {
             Debug.Log("Read opponent data");
-            Opponent.ReadFromString(mMatchData.Replay);
+            Opponent.Steps = mMatchData.Steps;
             Opponent.Replaying = true;
         } else {
             Opponent.gameObject.SetActive(false);
@@ -98,7 +97,7 @@ public class GameManager : MonoBehaviour {
 
         // finish the match
         //SetStandBy("Sending...");
-        PlayGamesPlatform.Instance.TurnBased.Finish(mMatch, mMatchData.ToBytes(),
+        PlayGamesPlatform.Instance.TurnBased.Finish(mMatch, mMatchData.ToBytes(Player.Steps),
             outcome, (bool success) => {
                 //EndStandBy();
                 Debug.Log(success ? (winnerIsMe ? "YOU WON!" : "YOU LOST!") :
@@ -108,9 +107,7 @@ public class GameManager : MonoBehaviour {
 
     void TakeTurn() {
         //SetStandBy("Sending...");
-        mMatchData.Replay = Player.ToString();
-
-        PlayGamesPlatform.Instance.TurnBased.TakeTurn(mMatch, mMatchData.ToBytes(),
+        PlayGamesPlatform.Instance.TurnBased.TakeTurn(mMatch, mMatchData.ToBytes(Player.Steps),
             DecideNextToPlay(), (bool success) => {
                 //EndStandBy();
                 Debug.Log(success ? "Turn taken" : "Error taking turn");
