@@ -18,6 +18,8 @@ public class PlatformerCharacter2D : MonoBehaviour {
     Attack PlayerAttack;
     Animator Anim;
     bool FacingRight = true;
+    int Score;
+    int LastCollected = -1;
 
     void Awake() {
         // Setting up references.
@@ -70,5 +72,27 @@ public class PlatformerCharacter2D : MonoBehaviour {
         Vector3 theScale = transform.localScale;
         theScale.x *= -1;
         transform.localScale = theScale;
+    }
+
+    void OnTriggerEnter2D(Collider2D other) {
+        if (other.tag == "Collectible") {
+            Collectible collectible = other.GetComponent<Collectible>();
+            Collect(collectible.GetId());
+            collectible.Collect();
+        }
+    }
+
+    void Collect(int id) {
+        Score++;
+        Debug.Log("Collected: " + Score);
+        LastCollected = id;
+    }
+
+    public int GetLastCollected() {
+        return LastCollected;
+    }
+
+    public void ResetLastCollected() {
+        LastCollected = -1;
     }
 }

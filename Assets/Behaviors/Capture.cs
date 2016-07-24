@@ -14,7 +14,6 @@ public class Capture : MonoBehaviour {
     Platformer2DUserControl PlayerControl;
     Vector2 StartPosition;
     Attack OpponentAttack;
-    int LastCollected = -1;
     int Score = 0;
 
     [SerializeField]
@@ -52,8 +51,8 @@ public class Capture : MonoBehaviour {
         step.x = Body.position.x;
         step.y = Body.position.y;
         step.attack = PlayerControl.GetAttack();
-        step.collect = LastCollected;
-        LastCollected = -1; // reset the collected item ID
+        step.collect = Player.GetLastCollected();
+        Player.ResetLastCollected(); // reset the collected item ID
         Steps.Add(step);
     }
 
@@ -77,20 +76,8 @@ public class Capture : MonoBehaviour {
         TickCount = 0;
     }
 
-    void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Collectible") {
-            Collectible collectible = other.GetComponent<Collectible>();
-            Collect(collectible.GetId());
-            collectible.Collect();
-        }
-    }
-
     void Collect(int id) {
         Score++;
-        Debug.Log("Collected: " + Score);
-        if (Recording) LastCollected = id;
-        else if (Replaying) {
-            LastCollected = Manager.GetStageObject(id).GetId();
-        }
+        Manager.GetStageObject(id).Collect();
     }
 }
