@@ -3,23 +3,24 @@ using UnityEngine;
 
 public class PlatformerCharacter2D : MonoBehaviour {
     [SerializeField]
-    private float MaxSpeed = 10f;                    // The fastest the player can travel in the x axis.
+    float MaxSpeed = 10f;                    // The fastest the player can travel in the x axis.
     [SerializeField]
-    private float JumpForce = 400f;                  // Amount of force added when the player jumps.
+    float JumpForce = 400f;                  // Amount of force added when the player jumps.
     [SerializeField]
-    private bool AirControl = false;                 // Whether or not a player can steer while jumping;
+    bool AirControl = false;                 // Whether or not a player can steer while jumping;
     [SerializeField]
-    private LayerMask WhatIsGround;                  // A mask determining what is ground to the character
-    private Transform GroundCheck;    // A position marking where to check if the player is grounded.
+    LayerMask WhatIsGround;                  // A mask determining what is ground to the character
+    Transform GroundCheck;    // A position marking where to check if the player is grounded.
     const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
-    private bool Grounded;            // Whether or not the player is grounded.
+    bool Grounded;            // Whether or not the player is grounded.
     const float k_CeilingRadius = .01f; // Radius of the overlap circle to determine if the player can stand up
-    private Rigidbody2D Body;
-    private Attack PlayerAttack;
-    private Animator Anim;
-    private bool FacingRight = true;
+    Rigidbody2D Body;
+    Attack PlayerAttack;
+    Animator Anim;
+    bool FacingRight = true;
+    int Score = 0;
 
-    private void Awake() {
+    void Awake() {
         // Setting up references.
         GroundCheck = transform.Find("GroundCheck");
         Body = GetComponent<Rigidbody2D>();
@@ -27,7 +28,7 @@ public class PlatformerCharacter2D : MonoBehaviour {
         Anim = GetComponent<Animator>();
     }
 
-    private void FixedUpdate() {
+    void FixedUpdate() {
         Grounded = false;
         // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
         // This can be done using layers instead but Sample Assets will not overwrite your project settings.
@@ -65,11 +66,22 @@ public class PlatformerCharacter2D : MonoBehaviour {
         }
     }
 
-    private void Flip() {
+    void Flip() {
         FacingRight = !FacingRight;
         Vector3 theScale = transform.localScale;
         theScale.x *= -1;
         transform.localScale = theScale;
     }
 
+    void OnTriggerEnter2D(Collider2D other) {
+        if (other.tag == "Collectible") {
+            Collect();
+            other.GetComponent<Collectible>().Collect();
+        }
+    }
+
+    void Collect() {
+        Score++;
+        Debug.Log("Collected: " + Score);
+    }
 }
