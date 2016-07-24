@@ -5,10 +5,9 @@ using System.IO;
 
 public class MatchData {
     const int Header = 600673; // sanity check for serialization
-    string FirstPlayerID = ""; // ID of the player that goes first
+    int Round = 0; // current round number
     public List<Vector3> Steps;
     public bool HasWinner = false;
-
 
     public MatchData() {
 
@@ -29,9 +28,7 @@ public class MatchData {
         MemoryStream memStream = new MemoryStream();
         BinaryWriter w = new BinaryWriter(memStream);
         w.Write(Header);
-        w.Write((byte)FirstPlayerID.Length);
-        w.Write(FirstPlayerID.ToCharArray());
-
+        w.Write(Round);
 
         // Write player steps
         w.Write(steps.Count);
@@ -55,12 +52,11 @@ public class MatchData {
             throw new UnsupportedMatchFormatException("Board data header " + header +
                     " not recognized.");
         }
-
-        int len = (int)r.ReadByte();
-        FirstPlayerID = new string(r.ReadChars(len));
+        // Read the current round number
+        Round = r.ReadInt32();
 
         // Get the number of steps
-        int nSteps = (int)r.ReadInt32();
+        int nSteps = r.ReadInt32();
         Debug.Log("Read nSteps: " + nSteps);
         Steps = new List<Vector3>();
 
@@ -72,11 +68,12 @@ public class MatchData {
         }
     }
 
-    // checks if the player was the first (the one who created the match)
-    public bool IsFirstPlayer(string id) {
-        // claim if unclaimed
-        if (FirstPlayerID.Equals("")) FirstPlayerID = id;
-        return FirstPlayerID.Equals(id);
+    public int GetRound() {
+        return Round;
+    }
+
+    public void IncRound() {
+        Round++;
     }
 
     public class UnsupportedMatchFormatException : System.Exception {

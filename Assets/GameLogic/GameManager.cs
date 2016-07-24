@@ -8,19 +8,19 @@ public class GameManager : MonoBehaviour {
     public Capture Opponent;
     public PauseMenu Menu;
 
-    private TurnBasedMatch mMatch = null;
-    private MatchData mMatchData = null;
-    private string mFinalMessage = null;
+    private TurnBasedMatch Match = null;
+    private MatchData Data = null;
+    private string FinalMessage = null;
 
-    private bool mEndingTurn = false;
+    private bool EndingTurn = false;
 
     // countdown to hide instructions
-    private bool mShowInstructions = false;
+    private bool ShowInstructions = false;
 
     void Start() {
-        mMatch = ServicesManager.Match;
-        mMatchData = ServicesManager.Data;
-        SetupObjects();
+        Match = ServicesManager.Match;
+        Data = ServicesManager.Data;
+        LaunchMatch();
     }
 
     void Update() {
@@ -31,43 +31,46 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Reset() {
-        mMatch = null;
-        mMatchData = null;
-        mFinalMessage = null;
-        mEndingTurn = false;
-        mShowInstructions = false;
+        Match = null;
+        Data = null;
+        FinalMessage = null;
+        EndingTurn = false;
+        ShowInstructions = false;
         Opponent.gameObject.SetActive(true);
         Opponent.Reset();
         //Player.Reset();
     }
 
-    private void SetupObjects() {
-        Debug.Log("Setup Objects");
-        if (mMatchData.Steps != null) {
-            Debug.Log("Read opponent data");
-            Opponent.Steps = mMatchData.Steps;
+    void LaunchMatch() {
+        if (Data.Steps != null) {
+            Opponent.Steps = Data.Steps;
             Opponent.Replaying = true;
+            MakeOpponentCollector();
         } else {
             Opponent.gameObject.SetActive(false);
         }
     }
+    
+    void MakeOpponentCollector() {
+        Player.gameObject.layer = 0;
+        Opponent.gameObject.layer = 9;
+    }
 
     string DecideNextToPlay() {
-        if (mMatch.AvailableAutomatchSlots > 0) {
+        if (Match.AvailableAutomatchSlots > 0) {
             // hand over to an automatch player
             return null;
         } else {
             // hand over to our (only) opponent
-            Participant opponent = Util.GetOpponent(mMatch);
+            Participant opponent = Util.GetOpponent(Match);
             return opponent == null ? null : opponent.ParticipantId;
         }
     }
 
     public void EndTurn() {
-        mEndingTurn = true;
-
+        EndingTurn = true;
         // do we have a winner?
-        if (mMatchData.HasWinner) {
+        if (Data.HasWinner) {
             FinishMatch();
         } else {
             TakeTurn();
@@ -75,8 +78,8 @@ public class GameManager : MonoBehaviour {
     }
 
     string GetAdversaryParticipantId() {
-        foreach (Participant p in mMatch.Participants) {
-            if (!p.ParticipantId.Equals(mMatch.SelfParticipantId)) {
+        foreach (Participant p in Match.Participants) {
+            if (!p.ParticipantId.Equals(Match.SelfParticipantId)) {
                 return p.ParticipantId;
             }
         }
@@ -90,14 +93,14 @@ public class GameManager : MonoBehaviour {
 
         // define the match's outcome
         MatchOutcome outcome = new MatchOutcome();
-        outcome.SetParticipantResult(mMatch.SelfParticipantId,
+        outcome.SetParticipantResult(Match.SelfParticipantId,
             winnerIsMe ? MatchOutcome.ParticipantResult.Win : MatchOutcome.ParticipantResult.Loss);
         outcome.SetParticipantResult(GetAdversaryParticipantId(),
             winnerIsMe ? MatchOutcome.ParticipantResult.Loss : MatchOutcome.ParticipantResult.Win);
 
         // finish the match
         //SetStandBy("Sending...");
-        PlayGamesPlatform.Instance.TurnBased.Finish(mMatch, mMatchData.ToBytes(Player.Steps),
+        PlayGamesPlatform.Instance.TurnBased.Finish(Match, Data.ToBytes(Player.Steps),
             outcome, (bool success) => {
                 //EndStandBy();
                 Debug.Log(success ? (winnerIsMe ? "YOU WON!" : "YOU LOST!") :
@@ -107,7 +110,7 @@ public class GameManager : MonoBehaviour {
 
     void TakeTurn() {
         //SetStandBy("Sending...");
-        PlayGamesPlatform.Instance.TurnBased.TakeTurn(mMatch, mMatchData.ToBytes(Player.Steps),
+        PlayGamesPlatform.Instance.TurnBased.TakeTurn(Match, Data.ToBytes(Player.Steps),
             DecideNextToPlay(), (bool success) => {
                 //EndStandBy();
                 Debug.Log(success ? "Turn taken" : "Error taking turn");
@@ -115,7 +118,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public void Cancel() {
-        PlayGamesPlatform.Instance.TurnBased.Cancel(mMatch,
+        PlayGamesPlatform.Instance.TurnBased.Cancel(Match,
             (bool success) => {
                 //EndStandBy();
                 Debug.Log(success ? "Cancelled" : "Error cancelling");

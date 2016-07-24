@@ -18,7 +18,6 @@ public class PlatformerCharacter2D : MonoBehaviour {
     Attack PlayerAttack;
     Animator Anim;
     bool FacingRight = true;
-    int Score = 0;
 
     void Awake() {
         // Setting up references.
@@ -71,17 +70,5 @@ public class PlatformerCharacter2D : MonoBehaviour {
         Vector3 theScale = transform.localScale;
         theScale.x *= -1;
         transform.localScale = theScale;
-    }
-
-    void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Collectible") {
-            Collect();
-            other.GetComponent<Collectible>().Collect();
-        }
-    }
-
-    void Collect() {
-        Score++;
-        Debug.Log("Collected: " + Score);
     }
 }

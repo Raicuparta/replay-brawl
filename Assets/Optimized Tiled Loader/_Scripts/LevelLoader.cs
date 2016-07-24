@@ -15,6 +15,7 @@ public class LevelLoader : MonoBehaviour
     public PhysicsMaterial2D TileMaterial;
     public GameObject GoalObject;
 
+    GameObject _objects;
     GameObject _tiles;
     GameObject _boundaries;
 
@@ -33,7 +34,14 @@ public class LevelLoader : MonoBehaviour
             _tiles = new GameObject();
             _tiles.transform.SetParent(transform);
             _tiles.transform.localPosition = Vector2.zero;
-            _tiles.name = "_Tiles";
+            _tiles.name = "Tiles";
+        }
+
+        if (_objects == null) {
+            _objects = new GameObject();
+            _objects.transform.SetParent(transform);
+            _objects.transform.localPosition = Vector2.zero;
+            _objects.name = "Objects";
         }
 
         // Loads the JSON file.
@@ -193,8 +201,9 @@ public class LevelLoader : MonoBehaviour
         Debug.Log("Loading Object");
         Vector2 position = new Vector2(xIndex * TileUnitySize.x, yIndex * TileUnitySize.y);
         GameObject newObject = (GameObject) Instantiate(GoalObject, position, Quaternion.identity);
+        newObject.name = "Object";
         // Put the new tile under our _tiles folder.
-        newObject.transform.SetParent(_tiles.transform);
+        newObject.transform.SetParent(_objects.transform);
         // Place it at the correct position.
         newObject.transform.localPosition = new Vector2(TileUnitySize.x * xIndex + TileUnitySize.x / 2, TileUnitySize.y * -yIndex - TileUnitySize.y / 2);
     }

@@ -9,11 +9,12 @@ public class Capture : MonoBehaviour {
     public bool DebugOn;
     public string DebugSteps;
 
-    private Rigidbody2D Body;
-    private PlatformerCharacter2D Player;
-    private Platformer2DUserControl PlayerControl;
-    private Vector2 StartPosition;
-    private Attack OpponentAttack;
+    Rigidbody2D Body;
+    PlatformerCharacter2D Player;
+    Platformer2DUserControl PlayerControl;
+    Vector2 StartPosition;
+    Attack OpponentAttack;
+    int Score = 0;
 
     [System.NonSerialized]
     public List<Vector3> Steps;
@@ -109,5 +110,17 @@ public class Capture : MonoBehaviour {
         Steps.Clear();
         Body.position = StartPosition;
         TickCount = 0;
+    }
+
+    void OnTriggerEnter2D(Collider2D other) {
+        if (other.tag == "Collectible") {
+            Collect();
+            other.GetComponent<Collectible>().Collect();
+        }
+    }
+
+    void Collect() {
+        Score++;
+        Debug.Log("Collected: " + Score);
     }
 }
