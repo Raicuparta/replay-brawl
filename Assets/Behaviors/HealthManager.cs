@@ -3,7 +3,6 @@ using System.Collections;
 
 public class HealthManager : MonoBehaviour {
     int Health;
-    bool Dead = false;
     [SerializeField]
     int InitialHealth = 100;
     [SerializeField]
@@ -11,6 +10,13 @@ public class HealthManager : MonoBehaviour {
     ParticleSystem Particles;
     Transform HealthBar;
     float InitialHealthScaleX;
+    CharacterState State = CharacterState.Normal;
+
+    enum CharacterState {
+        Normal,
+        Winner,
+        Dead
+    }
 
     void Awake() {
         Particles = GetComponent<ParticleSystem>();
@@ -23,7 +29,7 @@ public class HealthManager : MonoBehaviour {
     }
 
     public void Hit() {
-        if (Dead) return;
+        if (IsNormal()) return;
         Debug.Log("Registered Hit: " + Health);
 
         Particles.Play();
@@ -43,11 +49,33 @@ public class HealthManager : MonoBehaviour {
     }
 
     void Death() {
-        Dead = true;
+        State = CharacterState.Dead;
         Debug.Log("Someone died");
     }
 
+    public void CheckIfWinner() {
+        // Check if collected everything
+        int count = GameObject.FindGameObjectsWithTag("Collectible").Length;
+        Debug.LogWarning("Remaining obstacles: " + count);
+        if (count <= 0) {
+            Debug.LogWarning("Collected all");
+            Victory();
+        }
+    }
+
+    public void Victory() {
+        State = CharacterState.Winner;
+    }
+
     public bool IsDead() {
-        return Dead;
+        return State == CharacterState.Dead;
+    }
+
+    public bool IsWinner() {
+        return State == CharacterState.Winner;
+    }
+
+    public bool IsNormal() {
+        return State == CharacterState.Normal;
     }
 }

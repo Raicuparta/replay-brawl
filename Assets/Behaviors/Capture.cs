@@ -98,7 +98,8 @@ public class Capture : MonoBehaviour {
     void Collect(int id) {
         Score++;
         Collectible c = Manager.GetStageObject(id);
-        if (c == null) return;
+        if (c == null) Debug.LogError("No object found with ID " + id);
         c.Collect();
+        GetComponent<HealthManager>().CheckIfWinner();
     }
 }

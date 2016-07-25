@@ -77,8 +77,8 @@ public class PlatformerCharacter2D : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D other) {
         if (other.tag == "Collectible") {
             Collectible collectible = other.GetComponent<Collectible>();
-            Collect(collectible.GetId());
             collectible.Collect();
+            Collect(collectible.GetId());
         }
     }
 
@@ -86,6 +86,7 @@ public class PlatformerCharacter2D : MonoBehaviour {
         Score++;
         Debug.Log("Collected: " + Score);
         LastCollected = id;
+        GetComponent<HealthManager>().CheckIfWinner();
     }
 
     public int GetLastCollected() {

@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour {
             Opponent.gameObject.SetActive(false);
         }
     }
-    
+
     void MakeOpponentCollector() {
         Player.gameObject.layer = 0;
         Opponent.gameObject.layer = 9;

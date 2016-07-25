@@ -26,8 +26,8 @@ public class PauseMenu : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        if (Player.IsDead()) Defeat();
-        else if (Opponent.IsDead()) Victory();
+        if (Player.IsDead() || Opponent.IsWinner()) Defeat();
+        else if (Opponent.IsDead() || Player.IsWinner()) Victory();
     }
 
     void Show(string title) {
