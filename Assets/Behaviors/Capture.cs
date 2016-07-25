@@ -65,7 +65,7 @@ public class Capture : MonoBehaviour {
         Step step = new Step();
         step.x = Body.position.x - PreviousPosition.x;
         step.y = Body.position.y - PreviousPosition.y;
-        Debug.Log("Recorded position for " + DebugCount + ": " + Body.position.x + ", " + Body.position.y);
+        //Debug.Log("Recorded position for " + DebugCount + ": " + Body.position.x + ", " + Body.position.y);
         step.attack = PlayerControl.GetAttack();
         step.collect = Player.GetLastCollected();
         Player.ResetLastCollected(); // reset the collected item ID
@@ -84,7 +84,7 @@ public class Capture : MonoBehaviour {
         if (TickCount >= Steps.Count) return;
         Step step = Steps[TickCount];
         Body.position += new Vector2(step.x, step.y);
-        Debug.Log("Replayed position for " + DebugCount + ": " + step.x + ", " + step.y);
+        //Debug.Log("Replayed position for " + DebugCount + ": " + step.x + ", " + step.y);
         if (step.attack) OpponentAttack.TriggerAttack();
         if (step.collect != -1) Collect(step.collect); 
     }
