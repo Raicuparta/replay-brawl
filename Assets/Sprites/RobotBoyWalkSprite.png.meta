@@ -1,5 +1,7 @@
 fileFormatVersion: 2
 guid: feda0c18015b3284cabbc0da85254f9a
+timeCreated: 1469476747
+licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: RobotBoyWalk00
@@ -18,6 +20,10 @@ TextureImporter:
     21300026: RobotBoyWalk13
     21300028: RobotBoyWalk14
     21300030: RobotBoyWalk15
+    21300032: RobotBoyWalk0
+    21300034: RobotBoyWalk1
+    21300036: RobotBoyWalk2
+    21300038: RobotBoyWalk3
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -31,7 +37,7 @@ TextureImporter:
   bumpmap:
     convertToNormalMap: 0
     externalNormalMap: 0
-    heightScale: .25
+    heightScale: 0.25
     normalMapFilter: 0
   isReadable: 0
   grayScaleToAlpha: 0
@@ -41,9 +47,9 @@ TextureImporter:
   cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: -1
-  maxTextureSize: 2048
+  maxTextureSize: 32
   textureSettings:
-    filterMode: -1
+    filterMode: 0
     aniso: 1
     mipBias: -1
     wrapMode: 1
@@ -51,13 +57,14 @@ TextureImporter:
   lightmap: 0
   rGBM: 0
   compressionQuality: 50
+  allowsAlphaSplitting: 0
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
-  spritePivot: {x: .5, y: .5}
+  spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 200
+  spritePixelsToUnits: 40
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings:
@@ -65,180 +72,100 @@ TextureImporter:
     maxTextureSize: 1024
     textureFormat: -2
     compressionQuality: 100
+    allowsAlphaSplitting: 0
   - buildTarget: Android
     maxTextureSize: 1024
     textureFormat: -1
     compressionQuality: 50
+    allowsAlphaSplitting: 0
   - buildTarget: BlackBerry
     maxTextureSize: 1024
     textureFormat: -1
     compressionQuality: 50
+    allowsAlphaSplitting: 0
   - buildTarget: WP8
     maxTextureSize: 1024
     textureFormat: -1
     compressionQuality: 50
+    allowsAlphaSplitting: 0
   spriteSheet:
     sprites:
-    - name: RobotBoyWalk00
+    - name: RobotBoyWalk0
       rect:
         serializedVersion: 2
         x: 0
-        y: 1773
-        width: 275
-        height: 275
+        y: 32
+        width: 32
+        height: 32
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: RobotBoyWalk01
+      outline:
+      - - {x: -7, y: 14}
+        - {x: -10, y: 13}
+        - {x: -16, y: 0}
+        - {x: -16, y: -16}
+        - {x: 5, y: -16}
+        - {x: 11, y: -14}
+        - {x: 11, y: 9}
+        - {x: 7, y: 14}
+    - name: RobotBoyWalk1
       rect:
         serializedVersion: 2
-        x: 275
-        y: 1773
-        width: 275
-        height: 275
+        x: 32
+        y: 32
+        width: 32
+        height: 32
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: RobotBoyWalk02
-      rect:
-        serializedVersion: 2
-        x: 550
-        y: 1773
-        width: 275
-        height: 275
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: RobotBoyWalk03
-      rect:
-        serializedVersion: 2
-        x: 825
-        y: 1773
-        width: 275
-        height: 275
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: RobotBoyWalk04
-      rect:
-        serializedVersion: 2
-        x: 1100
-        y: 1773
-        width: 275
-        height: 275
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: RobotBoyWalk05
-      rect:
-        serializedVersion: 2
-        x: 1375
-        y: 1773
-        width: 275
-        height: 275
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: RobotBoyWalk06
-      rect:
-        serializedVersion: 2
-        x: 1650
-        y: 1773
-        width: 275
-        height: 275
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: RobotBoyWalk07
+      outline:
+      - - {x: 10, y: 13}
+        - {x: -6, y: 13}
+        - {x: -11, y: 11}
+        - {x: -11, y: -16}
+        - {x: 1, y: -16}
+        - {x: 2, y: -14}
+        - {x: 11, y: -1}
+        - {x: 11, y: 11}
+    - name: RobotBoyWalk2
       rect:
         serializedVersion: 2
         x: 0
-        y: 1498
-        width: 275
-        height: 275
+        y: 0
+        width: 32
+        height: 32
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: RobotBoyWalk08
+      outline:
+      - - {x: -5, y: 14}
+        - {x: -15, y: 9}
+        - {x: -15, y: -16}
+        - {x: 6, y: -16}
+        - {x: 11, y: -3}
+        - {x: 11, y: 14}
+    - name: RobotBoyWalk3
       rect:
         serializedVersion: 2
-        x: 275
-        y: 1498
-        width: 275
-        height: 275
+        x: 32
+        y: 0
+        width: 32
+        height: 32
       alignment: 0
-      pivot: {x: .5, y: .5}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: RobotBoyWalk09
-      rect:
-        serializedVersion: 2
-        x: 550
-        y: 1498
-        width: 275
-        height: 275
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: RobotBoyWalk10
-      rect:
-        serializedVersion: 2
-        x: 825
-        y: 1498
-        width: 275
-        height: 275
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: RobotBoyWalk11
-      rect:
-        serializedVersion: 2
-        x: 1100
-        y: 1498
-        width: 275
-        height: 275
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: RobotBoyWalk12
-      rect:
-        serializedVersion: 2
-        x: 1375
-        y: 1498
-        width: 275
-        height: 275
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: RobotBoyWalk13
-      rect:
-        serializedVersion: 2
-        x: 1652
-        y: 1498
-        width: 275
-        height: 275
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: RobotBoyWalk14
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 1223
-        width: 275
-        height: 275
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: RobotBoyWalk15
-      rect:
-        serializedVersion: 2
-        x: 275
-        y: 1223
-        width: 275
-        height: 275
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -4, y: 13}
+        - {x: -10, y: 6}
+        - {x: -11, y: -5}
+        - {x: -11, y: -16}
+        - {x: 4, y: -16}
+        - {x: 11, y: -2}
+        - {x: 11, y: 9}
+        - {x: 6, y: 13}
+    outline: []
   spritePackingTag: 
   userData: 
   assetBundleName: 
+  assetBundleVariant: 
