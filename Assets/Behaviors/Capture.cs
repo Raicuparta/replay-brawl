@@ -21,6 +21,7 @@ public class Capture : MonoBehaviour {
 
     [System.NonSerialized]
     public List<Step> Steps;
+    Step PreviousStep;
     [System.NonSerialized]
     public int TickCount = 0;
 
@@ -37,7 +38,17 @@ public class Capture : MonoBehaviour {
         Player = GetComponent<PlatformerCharacter2D>();
         PlayerControl = GetComponent<Platformer2DUserControl>();
         StartPosition = Body.position;
+        //Body.position = Vector2.zero;
         OpponentAttack = GetComponent<Attack>();
+    }
+
+    void Start() {
+        // Create the first step
+        // We only use this to make the diff with the step that follows
+        PreviousStep = new Step {
+            x = StartPosition.x,
+            y = StartPosition.y
+        };
     }
 
     void FixedUpdate() {
@@ -48,11 +59,12 @@ public class Capture : MonoBehaviour {
 
     void Record() {
         Step step = new Step();
-        step.x = Body.position.x;
-        step.y = Body.position.y;
+        step.x = Body.position.x - PreviousStep.x;
+        step.y = Body.position.y - PreviousStep.y;
         step.attack = PlayerControl.GetAttack();
         step.collect = Player.GetLastCollected();
         Player.ResetLastCollected(); // reset the collected item ID
+        PreviousStep = step;
         Steps.Add(step);
     }
 
@@ -65,7 +77,7 @@ public class Capture : MonoBehaviour {
         }
         if (TickCount >= Steps.Count) return;
         Step step = Steps[TickCount];
-        Body.position = new Vector2(step.x, step.y);
+        Body.position += new Vector2(step.x, step.y);
         if (step.attack) OpponentAttack.TriggerAttack();
         if (step.collect != -1) Collect(step.collect); 
     }
@@ -78,6 +90,8 @@ public class Capture : MonoBehaviour {
 
     void Collect(int id) {
         Score++;
-        Manager.GetStageObject(id).Collect();
+        Collectible c = Manager.GetStageObject(id);
+        if (c == null) return;
+        c.Collect();
     }
 }

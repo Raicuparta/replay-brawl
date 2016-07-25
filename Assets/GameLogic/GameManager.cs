@@ -132,6 +132,7 @@ public class GameManager : MonoBehaviour {
             if (collectible.GetId() == id)
                 return collectible;
         }
+        Debug.LogError("No object found with ID " + id);
         return null;
     }
 }

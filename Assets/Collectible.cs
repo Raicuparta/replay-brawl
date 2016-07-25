@@ -2,14 +2,8 @@
 using System.Collections;
 
 public class Collectible : MonoBehaviour {
-    int Id;
-
-    void Start() {
-        Id = GetInstanceID();
-    }
-
     public int GetId() {
-        return Id;
+        return int.Parse(name);
     }
 
 	// Called when this object is collected

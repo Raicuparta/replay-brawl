@@ -14,6 +14,7 @@ public class LevelLoader : MonoBehaviour
     public int TileLayer;
     public PhysicsMaterial2D TileMaterial;
     public GameObject GoalObject;
+    int ObjectCount;
 
     GameObject _objects;
     GameObject _tiles;
@@ -26,6 +27,7 @@ public class LevelLoader : MonoBehaviour
 
     public void Start()
     {
+        ObjectCount = 1;
         Clear();
 
         // Make a new empty gameobject where all the tiles in the level will be placed under.
@@ -201,7 +203,7 @@ public class LevelLoader : MonoBehaviour
         Debug.Log("Loading Object");
         Vector2 position = new Vector2(xIndex * TileUnitySize.x, yIndex * TileUnitySize.y);
         GameObject newObject = (GameObject) Instantiate(GoalObject, position, Quaternion.identity);
-        newObject.name = "Object";
+        newObject.name = "" + ObjectCount++;
         // Put the new tile under our _tiles folder.
         newObject.transform.SetParent(_objects.transform);
         // Place it at the correct position.
