@@ -62,6 +62,8 @@ public class MatchData {
         // for the actions that have their bit set to 1.
         int mask = GenerateMask(step);
         w.Write(mask);
+        Debug.Log("Writing mask to bytes: " + mask);
+        Debug.Log("Writing position to bytes: " + step.x + ", " + step.y);
         if (CheckMask(Mask.x, mask)) w.Write(step.x);
         if (CheckMask(Mask.y, mask)) w.Write(step.y);
         if (CheckMask(Mask.collect, mask)) w.Write(step.collect);
@@ -75,7 +77,7 @@ public class MatchData {
     int GenerateMask(Capture.Step step) {
         int mask = 0;
         if (step.x != 0) mask |= (int) Mask.x;
-        if (step.y != 0) mask |= (int)Mask.y;
+        if (step.y != 0) mask |= (int) Mask.y;
         if (step.collect != -1) mask |= (int)Mask.collect;
         if (step.attack) mask |= (int)Mask.attack;
         return mask;
@@ -85,6 +87,7 @@ public class MatchData {
         // Read the mask to know which values we can read from the bytes
         // The others are set to their default values
         int mask = r.ReadInt32();
+        Debug.Log("Read mask from bytes: " + mask);
         Capture.Step step = new Capture.Step();
         if (CheckMask(Mask.x, mask)) step.x = r.ReadSingle();
         if (CheckMask(Mask.y, mask)) step.y = r.ReadSingle();
@@ -92,6 +95,8 @@ public class MatchData {
         else step.collect = -1; // -1 means undefined here
         // booelans default to false so we only need to set the attack to true if necessary
         if (CheckMask(Mask.attack, mask)) step.attack = true;
+
+        Debug.Log("Read position from bytes: " + step.x + ", " + step.y);
         return step;
     }
 

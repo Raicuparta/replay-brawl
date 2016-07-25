@@ -8,6 +8,7 @@ public class Capture : MonoBehaviour {
 
     public bool DebugOn;
     public string DebugSteps;
+    public static int DebugCount = 0;
 
     Rigidbody2D Body;
     PlatformerCharacter2D Player;
@@ -21,7 +22,7 @@ public class Capture : MonoBehaviour {
 
     [System.NonSerialized]
     public List<Step> Steps;
-    Step PreviousStep;
+    Vector2 PreviousPosition;
     [System.NonSerialized]
     public int TickCount = 0;
 
@@ -43,12 +44,15 @@ public class Capture : MonoBehaviour {
     }
 
     void Start() {
+
         // Create the first step
-        // We only use this to make the diff with the step that follows
-        PreviousStep = new Step {
-            x = StartPosition.x,
-            y = StartPosition.y
-        };
+        // It marks the absolute starting position instead of a diff
+        Step step = new Step();
+        step.x = StartPosition.x;
+        step.y = StartPosition.y;
+        PreviousPosition = StartPosition;
+        Steps.Add(step);
+        DebugCount++;
     }
 
     void FixedUpdate() {
@@ -59,12 +63,13 @@ public class Capture : MonoBehaviour {
 
     void Record() {
         Step step = new Step();
-        step.x = Body.position.x - PreviousStep.x;
-        step.y = Body.position.y - PreviousStep.y;
+        step.x = Body.position.x - PreviousPosition.x;
+        step.y = Body.position.y - PreviousPosition.y;
+        Debug.Log("Recorded position for " + DebugCount + ": " + Body.position.x + ", " + Body.position.y);
         step.attack = PlayerControl.GetAttack();
         step.collect = Player.GetLastCollected();
         Player.ResetLastCollected(); // reset the collected item ID
-        PreviousStep = step;
+        PreviousPosition = Body.position;
         Steps.Add(step);
     }
 
@@ -74,10 +79,12 @@ public class Capture : MonoBehaviour {
             TickCount = 0;
             Recording = false;
             ToString();
+            Body.position = Vector2.zero;
         }
         if (TickCount >= Steps.Count) return;
         Step step = Steps[TickCount];
         Body.position += new Vector2(step.x, step.y);
+        Debug.Log("Replayed position for " + DebugCount + ": " + step.x + ", " + step.y);
         if (step.attack) OpponentAttack.TriggerAttack();
         if (step.collect != -1) Collect(step.collect); 
     }
