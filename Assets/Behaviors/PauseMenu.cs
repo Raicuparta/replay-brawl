@@ -18,11 +18,15 @@ public class PauseMenu : MonoBehaviour {
     GameManager GameManager;
 
     Canvas Menu;
+    CanvasScaler Scaler;
 
     void Awake() {
         Menu = GetComponent<Canvas>();
+        Scaler = GetComponent<CanvasScaler>();
         Title = transform.Find("Title").GetComponent<Text>();
         DefaultTitle = Title.text;
+        Menu.enabled = false;
+        Scaler.enabled = false;
     }
 
     void FixedUpdate() {
@@ -32,12 +36,15 @@ public class PauseMenu : MonoBehaviour {
 
     void Show(string title) {
         Menu.enabled = true;
+        Scaler.enabled = true;
         Title.text = title;
     }
 
     void Hide() {
-        if (!Player.IsDead() && !Opponent.IsDead())
+        if (!Player.IsDead() && !Opponent.IsDead()) {
             Menu.enabled = false;
+            Scaler.enabled = false;
+        }
     }
 
     public void Toggle() {
