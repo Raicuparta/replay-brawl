@@ -9,9 +9,6 @@ public class MatchData {
     public List<Capture.Step> Steps;
     public bool HasWinner = false;
 
-    Vector2 PreviousPosition;
-    bool DefinedPrevious = false;
-
     public MatchData() {
 
     }
@@ -53,10 +50,8 @@ public class MatchData {
 
     // Step masks
     enum Mask {
-        x = 1,      // 0001
-        y = 2,      // 0010
-        collect = 4,// 0100
-        attack = 8  // 1000
+        collect = 1,// 01
+        attack = 2  // 10
     }
 
     void WriteStep(BinaryWriter w, Capture.Step step) {
@@ -65,10 +60,10 @@ public class MatchData {
         // for the actions that have their bit set to 1.
         int mask = GenerateMask(step);
         w.Write(mask);
-        //Debug.Log("Writing mask to bytes: " + mask);
+        Debug.Log("Writing mask to bytes: " + mask);
         //Debug.Log("Writing position to bytes: " + step.x + ", " + step.y);
-        if (CheckMask(Mask.x, mask)) w.Write(step.x);
-        if (CheckMask(Mask.y, mask)) w.Write(step.y);
+        w.Write(step.x);
+        w.Write(step.y);
         if (CheckMask(Mask.collect, mask)) w.Write(step.collect);
         if (CheckMask(Mask.attack, mask)) w.Write(step.attack);
     }
@@ -79,16 +74,6 @@ public class MatchData {
 
     int GenerateMask(Capture.Step step) {
         int mask = 0;
-
-        if (!DefinedPrevious) {
-            PreviousPosition.Set(step.x, step.y);
-            DefinedPrevious = true;
-            mask |= (int)Mask.x;
-            mask |= (int)Mask.y;
-        } else {
-            if (step.x != PreviousPosition.x) mask |= (int)Mask.x;
-            if (step.y != PreviousPosition.y) mask |= (int)Mask.y;
-        }
         if (step.collect != -1) mask |= (int)Mask.collect;
         if (step.attack) mask |= (int)Mask.attack;
         return mask;
@@ -98,10 +83,10 @@ public class MatchData {
         // Read the mask to know which values we can read from the bytes
         // The others are set to their default values
         int mask = r.ReadInt32();
-        //Debug.Log("Read mask from bytes: " + mask);
+        Debug.Log("Read mask from bytes: " + mask);
         Capture.Step step = new Capture.Step();
-        if (CheckMask(Mask.x, mask)) step.x = r.ReadSingle();
-        if (CheckMask(Mask.y, mask)) step.y = r.ReadSingle();
+        step.x = r.ReadSingle();
+        step.y = r.ReadSingle();
         if (CheckMask(Mask.collect, mask)) step.collect = r.ReadInt32();
         else step.collect = -1; // -1 means undefined here
         // booelans default to false so we only need to set the attack to true if necessary
