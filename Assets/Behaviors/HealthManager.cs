@@ -48,7 +48,7 @@ public class HealthManager : MonoBehaviour {
         HealthBar.localScale = newScale;
     }
 
-    void Death() {
+    public void Death() {
         State = CharacterState.Dead;
         Debug.Log("Someone died");
     }
