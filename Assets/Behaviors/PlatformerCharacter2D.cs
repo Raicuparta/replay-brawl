@@ -29,14 +29,15 @@ public class PlatformerCharacter2D : MonoBehaviour {
         Anim = GetComponent<Animator>();
     }
 
-    void FixedUpdate() {
+    void Update() {
         Grounded = false;
         // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
         // This can be done using layers instead but Sample Assets will not overwrite your project settings.
         Collider2D[] colliders = Physics2D.OverlapCircleAll(GroundCheck.position, k_GroundedRadius, WhatIsGround);
-        for (int i = 0; i < colliders.Length; i++) {
-            if (colliders[i].gameObject != gameObject)
+        for (int i = 0; i < colliders.Length && !Grounded; i++) {
+            if (colliders[i].gameObject != gameObject) {
                 Grounded = true;
+            }
         }
         Anim.SetBool("Ground", Grounded);
         Anim.SetFloat("vSpeed", Body.velocity.y);
