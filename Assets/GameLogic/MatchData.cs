@@ -65,7 +65,7 @@ public class MatchData {
         w.Write(step.x);
         w.Write(step.y);
         if (CheckMask(Mask.collect, mask)) w.Write(step.collect);
-        if (CheckMask(Mask.attack, mask)) w.Write(step.attack);
+        //if (CheckMask(Mask.attack, mask)) w.Write(step.attack);
     }
 
     bool CheckMask(Mask action, int mask) {

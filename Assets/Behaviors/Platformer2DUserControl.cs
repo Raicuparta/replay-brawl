@@ -10,6 +10,7 @@ public class Platformer2DUserControl : MonoBehaviour
     public float JumpThreshold = 0.5f; // How much you need to move the joystick up to trigger a jump
     private PlatformerCharacter2D Character;
     private bool Attack;
+    private bool Jump;
     private float PrevJoyV = 0;
 
 
@@ -24,6 +25,8 @@ public class Platformer2DUserControl : MonoBehaviour
         // Read button inputs in Update so presses aren't missed.
         if (!Attack)
             Attack = CnInputManager.GetButtonDown("Attack");
+        if (!Jump)
+            Jump = CnInputManager.GetButtonDown("Jump");
     }
 
 
@@ -39,8 +42,9 @@ public class Platformer2DUserControl : MonoBehaviour
         PrevJoyV = v;
 
         // Pass all parameters to the character control script.
-        Character.Move(h, Attack, jump);
+        Character.Move(h, Attack, jump || Jump);
         Attack = false;
+        Jump = false;
     }
 
     public bool GetAttack() {
