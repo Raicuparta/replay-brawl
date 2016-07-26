@@ -29,7 +29,7 @@ public class HealthManager : MonoBehaviour {
     }
 
     public void Hit() {
-        if (IsNormal()) return;
+        if (!IsNormal()) return;
         Debug.Log("Registered Hit: " + Health);
 
         Particles.Play();

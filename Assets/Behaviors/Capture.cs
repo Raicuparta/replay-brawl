@@ -5,9 +5,7 @@ using System.Collections.Generic;
 public class Capture : MonoBehaviour {
     public bool Recording = false;
     public bool Replaying = false;
-
-    public bool DebugOn;
-    public string DebugSteps;
+    
     public static int DebugCount = 0;
 
     Rigidbody2D Body;
@@ -38,8 +36,8 @@ public class Capture : MonoBehaviour {
         Body = GetComponent<Rigidbody2D>();
         Player = GetComponent<PlatformerCharacter2D>();
         PlayerControl = GetComponent<Platformer2DUserControl>();
-        StartPosition = Body.position;
-        //Body.position = Vector2.zero;
+        StartPosition = transform.position;
+        //transform.position = Vector2.zero;
         OpponentAttack = GetComponent<Attack>();
     }
 
@@ -63,13 +61,13 @@ public class Capture : MonoBehaviour {
 
     void Record() {
         Step step = new Step();
-        step.x = Body.position.x - PreviousPosition.x;
-        step.y = Body.position.y - PreviousPosition.y;
-        //Debug.Log("Recorded position for " + DebugCount + ": " + Body.position.x + ", " + Body.position.y);
+        step.x = transform.position.x - PreviousPosition.x;
+        step.y = transform.position.y - PreviousPosition.y;
+        //Debug.Log("Recorded position for " + DebugCount + ": " + transform.position.x + ", " + transform.position.y);
         step.attack = PlayerControl.GetAttack();
         step.collect = Player.GetLastCollected();
         Player.ResetLastCollected(); // reset the collected item ID
-        PreviousPosition = Body.position;
+        PreviousPosition = transform.position;
         Steps.Add(step);
     }
 
@@ -79,11 +77,11 @@ public class Capture : MonoBehaviour {
             TickCount = 0;
             Recording = false;
             ToString();
-            Body.position = Vector2.zero;
+            transform.position = Vector2.zero;
         }
         if (TickCount >= Steps.Count) return;
         Step step = Steps[TickCount];
-        Body.position += new Vector2(step.x, step.y);
+        transform.position += new Vector3(step.x, step.y);
         //Debug.Log("Replayed position for " + DebugCount + ": " + step.x + ", " + step.y);
         if (step.attack) OpponentAttack.TriggerAttack();
         if (step.collect != -1) Collect(step.collect); 
@@ -91,7 +89,7 @@ public class Capture : MonoBehaviour {
 
     public void Reset() {
         Steps.Clear();
-        Body.position = StartPosition;
+        transform.position = StartPosition;
         TickCount = 0;
     }
 

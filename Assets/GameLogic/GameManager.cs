@@ -42,12 +42,12 @@ public class GameManager : MonoBehaviour {
     }
 
     void LaunchMatch() {
-        if (Data.Steps != null) {
+        if (Data != null && Data.Steps != null) {
             Opponent.Steps = Data.Steps;
             Opponent.Replaying = true;
             MakeOpponentCollector();
         } else {
-            Opponent.gameObject.SetActive(false);
+            //Opponent.gameObject.SetActive(false);
         }
     }
 
