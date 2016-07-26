@@ -25,7 +25,7 @@ public class PlatformerCharacter2D : MonoBehaviour {
         // Setting up references.
         GroundCheck = transform.Find("GroundCheck");
         Body = GetComponent<Rigidbody2D>();
-        PlayerAttack = GetComponent<Attack>();
+        PlayerAttack = GetComponentInChildren<Attack>();
         Anim = GetComponent<Animator>();
     }
 

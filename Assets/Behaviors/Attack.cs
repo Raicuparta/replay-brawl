@@ -18,7 +18,7 @@ public class Attack : MonoBehaviour {
     public Camera MainCamera;
 
     private void Start() {
-        Body = GetComponent<Rigidbody2D>();
+        Body = GetComponentInParent<Rigidbody2D>();
     }
 
     private void Update() {
@@ -40,7 +40,7 @@ public class Attack : MonoBehaviour {
     void ConnectAttack(Collider2D collider) {
         Debug.Log("Detect Atack " + collider.name);
         Attacking = false;
-        collider.GetComponent<HealthManager>().Hit();
+        collider.GetComponentInParent<HealthManager>().Hit();
         StartCoroutine(PauseFor(AttackPauseTime));
         ShakeScreen();
     }
@@ -56,7 +56,7 @@ public class Attack : MonoBehaviour {
         AttackAnimation = false;
         Attacking = false;
         CurrentAttackTime = 0;
-        GetComponent<Animator>().SetBool("Attack", false);
+        GetComponentInParent<Animator>().SetBool("Attack", false);
     }
 
     public void TriggerAttack() {
@@ -64,7 +64,7 @@ public class Attack : MonoBehaviour {
         Debug.Log("TriggerAttack");
             AttackAnimation = true;
             Attacking = true;
-            GetComponent<Animator>().SetBool("Attack", true);
+            GetComponentInParent<Animator>().SetBool("Attack", true);
         }
     }
 
