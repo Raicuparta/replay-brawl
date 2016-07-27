@@ -41,7 +41,7 @@ public class PauseMenu : MonoBehaviour {
         Title.text = title;
     }
 
-    void Hide() {
+    public void Hide() {
         Time.timeScale = 1;
         if (!Player.IsDead() && !Opponent.IsDead()) {
             Menu.enabled = false;
