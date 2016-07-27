@@ -10,6 +10,9 @@ public class HealthManager : MonoBehaviour {
     Transform HealthBar;
     float InitialHealthScaleX;
     CharacterState State = CharacterState.Normal;
+    Animator Anim;
+    float DamageTime = 0;
+    const float StartDamageTime = 0.2f;
 
     enum CharacterState {
         Normal,
@@ -19,6 +22,7 @@ public class HealthManager : MonoBehaviour {
 
     void Awake() {
         HealthBar = transform.Find("Health");
+        Anim = GetComponent<Animator>();
     }
 
     void Start() {
@@ -29,6 +33,7 @@ public class HealthManager : MonoBehaviour {
     public void Hit() {
         if (!IsNormal()) return;
         Debug.Log("Registered Hit: " + Health);
+        Anim.SetTrigger("Damage");
 
         // Decrease health
         Health -= HealthDecrement;

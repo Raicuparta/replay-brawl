@@ -21,6 +21,7 @@ public class PauseMenu : MonoBehaviour {
     CanvasScaler Scaler;
 
     void Awake() {
+        Time.timeScale = 1;
         Menu = GetComponent<Canvas>();
         Scaler = GetComponent<CanvasScaler>();
         Title = transform.Find("Title").GetComponent<Text>();
