@@ -31,8 +31,8 @@ public class PauseMenu : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        if (Player.IsDead() || Opponent.IsWinner()) Defeat();
-        else if (Opponent.IsDead() || Player.IsWinner()) Victory();
+        if (Player.IsDead() || Opponent.IsWinner()) EndTurn(DefeatTitle);
+        else if (Opponent.IsDead() || Player.IsWinner()) EndTurn(VictoryTitle);
     }
 
     void Show(string title) {
@@ -59,22 +59,14 @@ public class PauseMenu : MonoBehaviour {
         Show(DefaultTitle);
     }
 
-    public void Victory() {
+    public void EndTurn(string title) {
         FinishedTurn = true;
-        Show(VictoryTitle);
-    }
-
-    public void Defeat() {
-        FinishedTurn = true;
-        Show(DefeatTitle);
+        GameManager.EndTurn();
+        Show(title);
     }
 
     public void Exit() {
-        if (FinishedTurn) {
-            GameManager.EndTurn();
-        } else {
-            GameManager.Cancel();
-        }
+        if (!FinishedTurn) GameManager.Cancel();
         SceneManager.LoadScene("Menu");
     }
 }
