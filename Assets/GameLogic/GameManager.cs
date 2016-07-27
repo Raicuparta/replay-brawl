@@ -42,16 +42,17 @@ public class GameManager : MonoBehaviour {
     }
 
     void LaunchMatch() {
-        if (Data != null && Data.Steps != null) {
+        if (Data.Steps != null) {
             Opponent.Steps = Data.Steps;
             Opponent.Replaying = true;
             MakeOpponentCollector();
         } else {
-            //Opponent.gameObject.SetActive(false);
+            Opponent.gameObject.SetActive(false);
         }
     }
 
     void MakeOpponentCollector() {
+        Debug.Log("Opponent is collector");
         Player.gameObject.layer = 0;
         Opponent.gameObject.layer = 9;
     }
