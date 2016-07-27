@@ -8,6 +8,7 @@ public class Attack : MonoBehaviour {
     bool AttackAnimation;
     bool Attacking;
     Rigidbody2D Body;
+    ParticleSystem Particles;
 
     [SerializeField]
     float AttackPauseTime = 0.1f;  // How long to freeze the game for when attack connects
@@ -17,7 +18,8 @@ public class Attack : MonoBehaviour {
     float ShakeTime = 0.2f;
     public Camera MainCamera;
 
-    private void Start() {
+    private void Awake() {
+        Particles = GetComponent<ParticleSystem>();
         Body = GetComponentInParent<Rigidbody2D>();
     }
 
@@ -41,6 +43,7 @@ public class Attack : MonoBehaviour {
         Debug.Log("Detect Atack " + collider.name);
         Attacking = false;
         collider.GetComponentInParent<HealthManager>().Hit();
+        Particles.Play();
         StartCoroutine(PauseFor(AttackPauseTime));
         ShakeScreen();
     }

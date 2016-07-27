@@ -7,7 +7,6 @@ public class HealthManager : MonoBehaviour {
     int InitialHealth = 100;
     [SerializeField]
     int HealthDecrement = 10; // Amount of health to remove when receiving an attack
-    ParticleSystem Particles;
     Transform HealthBar;
     float InitialHealthScaleX;
     CharacterState State = CharacterState.Normal;
@@ -19,7 +18,6 @@ public class HealthManager : MonoBehaviour {
     }
 
     void Awake() {
-        Particles = GetComponent<ParticleSystem>();
         HealthBar = transform.Find("Health");
     }
 
@@ -31,8 +29,6 @@ public class HealthManager : MonoBehaviour {
     public void Hit() {
         if (!IsNormal()) return;
         Debug.Log("Registered Hit: " + Health);
-
-        Particles.Play();
 
         // Decrease health
         Health -= HealthDecrement;
