@@ -14,7 +14,7 @@ public class PointTowards : MonoBehaviour {
     }
     
     void Update() {
-        if (TargetRenderer.isVisible) {
+        if (TargetRenderer.isVisible || !TargetRenderer.gameObject.activeSelf) {
             SelfRenderer.enabled = false;
             return;
         }
