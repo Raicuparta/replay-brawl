@@ -12,6 +12,7 @@ public class LevelLoader : MonoBehaviour
     public TextAsset level_JSON;
     public float scale = 1;
     public int TileLayer;
+    public int ObjectLayer;
     public PhysicsMaterial2D TileMaterial;
     public GameObject GoalObject;
     int ObjectCount;
@@ -204,6 +205,7 @@ public class LevelLoader : MonoBehaviour
         Vector2 position = new Vector2(xIndex * TileUnitySize.x, yIndex * TileUnitySize.y);
         GameObject newObject = (GameObject) Instantiate(GoalObject, position, Quaternion.identity);
         newObject.name = "" + ObjectCount++;
+        newObject.layer = ObjectLayer;
         // Put the new tile under our _tiles folder.
         newObject.transform.SetParent(_objects.transform);
         // Place it at the correct position.
