@@ -42,7 +42,6 @@ public class Capture : MonoBehaviour {
     }
 
     void Start() {
-
         // Create the first step
         // It marks the absolute starting position instead of a diff
         Step step = new Step();
