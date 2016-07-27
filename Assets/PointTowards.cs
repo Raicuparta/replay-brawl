@@ -12,14 +12,14 @@ public class PointTowards : MonoBehaviour {
         TargetRenderer = Target.GetComponent<SpriteRenderer>();
         SelfRenderer.color = TargetRenderer.color;
     }
-
-    // Update is called once per frame
+    
     void Update() {
-        if (TargetRenderer.isVisible) SelfRenderer.enabled = false;
-        else SelfRenderer.enabled = true;
+        if (TargetRenderer.isVisible) {
+            SelfRenderer.enabled = false;
+            return;
+        }
+        SelfRenderer.enabled = true;
         transform.position = Origin.position;
-        Quaternion rotation = Quaternion.LookRotation
-             (Target.transform.position - transform.position, transform.TransformDirection(Vector3.up));
-        transform.rotation = new Quaternion(0, 0, rotation.z, rotation.w);
+        transform.LookAt(Target);
     }
 }

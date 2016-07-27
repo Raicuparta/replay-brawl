@@ -60,6 +60,7 @@ public class PauseMenu : MonoBehaviour {
     }
 
     public void EndTurn(string title) {
+        if (FinishedTurn) return;
         FinishedTurn = true;
         GameManager.EndTurn();
         Show(title);
