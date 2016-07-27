@@ -41,6 +41,7 @@ public class PauseMenu : MonoBehaviour {
     }
 
     void Hide() {
+        Time.timeScale = 1;
         if (!Player.IsDead() && !Opponent.IsDead()) {
             Menu.enabled = false;
             Scaler.enabled = false;
@@ -53,6 +54,7 @@ public class PauseMenu : MonoBehaviour {
     }
 
     public void Pause() {
+        Time.timeScale = 0;
         Show(DefaultTitle);
     }
 
