@@ -15,7 +15,7 @@ public class PauseMenu : MonoBehaviour {
     [SerializeField]
     HealthManager Opponent;
     [SerializeField]
-    GameManager GameManager;
+    GameManager Manager;
 
     Canvas Menu;
     CanvasScaler Scaler;
@@ -68,14 +68,14 @@ public class PauseMenu : MonoBehaviour {
     public void EndTurn(string title) {
         if (FinishedTurn) return;
         FinishedTurn = true;
-        GameManager.EndTurn();
+        SetChildVisible("Next", !Manager.SubmitRound);
+        Manager.EndTurn();
         Show(title);
-        SetChildVisible("Next", true);
         SetChildVisible("Resume", false);
     }
 
     public void Exit() {
-        if (!FinishedTurn) GameManager.Cancel();
+        if (!FinishedTurn) Manager.Cancel();
         SceneManager.LoadScene("Menu");
     }
 

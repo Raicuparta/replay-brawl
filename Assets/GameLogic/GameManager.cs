@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour {
     TurnBasedMatch Match = null;
     MatchData Data = null;
     // True if current round is to be uploaded when finished
-    bool SubmitRound = false;
+    public bool SubmitRound = false;
 
     void Start() {
         Match = ServicesManager.Match;
