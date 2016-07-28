@@ -55,6 +55,7 @@ public class PauseMenu : MonoBehaviour {
     }
 
     public void Toggle() {
+        if (FinishedTurn) return;
         if (Menu.enabled) Hide();
         else Pause();
     }
