@@ -68,7 +68,7 @@ public class PauseMenu : MonoBehaviour {
     public void EndTurn(string title) {
         if (FinishedTurn) return;
         FinishedTurn = true;
-        SetChildVisible("Next", !Manager.SubmitRound);
+        SetChildVisible("Next", !Manager.IsSoloRound);
         Manager.EndTurn();
         Show(title);
         SetChildVisible("Resume", false);

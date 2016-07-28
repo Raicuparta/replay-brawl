@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour {
     TurnBasedMatch Match = null;
     MatchData Data = null;
     // True if current round is to be uploaded when finished
-    public bool SubmitRound = false;
+    public bool IsSoloRound = false;
 
     void Start() {
         Match = ServicesManager.Match;
@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour {
         #endif
         // If there are no steps, it means we don't have a turn from the opponent
         // So we just straight to the Solo Round to make the first move
-        if (Data.Steps == null) SoloRound();
+        if (Data.Steps == null || Data.Steps.Count == 0) SoloRound();
         else FightRound();
     }
 
@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour {
         Opponent.Reset();
         Player.Reset();
         Menu.Reset();
-        SubmitRound = true;
+        IsSoloRound = true;
         MakePlayerCollector();
         Opponent.gameObject.SetActive(false);
         foreach (Transform child in Objects) {
@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour {
 
     // Round where the player tries to stop the opponent
     void FightRound() {
-        SubmitRound = false;
+        IsSoloRound = false;
         Opponent.Steps = Data.Steps;
         Opponent.Replaying = true;
         MakeOpponentCollector();
@@ -76,19 +76,16 @@ public class GameManager : MonoBehaviour {
     }
 
     string DecideNextToPlay() {
-        if (Match.AvailableAutomatchSlots > 0) {
-            // hand over to an automatch player
-            return null;
-        } else {
-            // hand over to our (only) opponent
-            Participant opponent = Util.GetOpponent(Match);
-            return opponent == null ? null : opponent.ParticipantId;
+        string nextId = null;
+        if (Match.AvailableAutomatchSlots == 0) {
+            Participant next;
+            // If this is a fight round, the next player is ourselves
+            // If it is a solo round, the next player is the opponent
+            if (IsSoloRound) next = Util.GetOpponent(Match);
+            else next = Match.Self;
+            nextId = next == null ? null : next.ParticipantId;
         }
-    }
-
-    public void EndTurn() {
-        if (SubmitRound) TakeTurn();
-        else SoloRound();
+        return nextId;
     }
 
     string GetAdversaryParticipantId() {
@@ -122,13 +119,31 @@ public class GameManager : MonoBehaviour {
             });
     }
 
-    void TakeTurn() {
+    public void EndTurn() {
+        // Checks if there's an updated version of the match and then sends the turn
+        PlayGamesPlatform.Instance.TurnBased.GetAllMatches(OnGetAllMatches);
+    }
+
+    void SendTurn() {
         //SetStandBy("Sending...");
+        if (!IsSoloRound) Player.Steps.Clear();
         PlayGamesPlatform.Instance.TurnBased.TakeTurn(Match, Data.ToBytes(Player.Steps),
             DecideNextToPlay(), (bool success) => {
                 //EndStandBy();
                 Debug.Log(success ? "Turn taken" : "Error taking turn");
+                if (!IsSoloRound && success) SoloRound();
             });
+    }
+
+    protected void OnGetAllMatches(TurnBasedMatch[] matches) {
+        foreach (TurnBasedMatch match in matches) {
+            Debug.Log("Match ID: " + match.MatchId);
+            if (match.MatchId == Match.MatchId) {
+                Match = match;
+                break;
+            }
+        }
+        SendTurn();
     }
 
     public void Cancel() {
