@@ -11,6 +11,6 @@ public class Collectible : MonoBehaviour {
         // remove tag so the object is no longer marked as collectible
         tag = "Untagged";
         // TODO do something else instead of immedeately destroying it?
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

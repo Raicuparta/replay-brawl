@@ -5,16 +5,13 @@ public class CharacterAnimator : MonoBehaviour {
     Animator Anim;
     Capture Cap;
     private bool FacingRight = true;
-    // Number of steps too look behind the current step
-    // to determine movement direction
-    static int VelMultiplier = 5;
 
-    void Start () {
+    void Start() {
         Anim = GetComponent<Animator>();
         Cap = GetComponent<Capture>();
-	}
-	
-	void FixedUpdate () {
+    }
+
+    void FixedUpdate() {
         Movement();
     }
 
@@ -27,11 +24,13 @@ public class CharacterAnimator : MonoBehaviour {
 
     private void HorizontalMovement() {
         // Compare the most recent position and the one before that to find the direction
-        float x = Cap.Steps[Cap.TickCount - 1].x * VelMultiplier;
-        Anim.SetFloat("Speed", Mathf.Abs(x)); // Animator uses this to pick animation
+        float x0 = Cap.Steps[Cap.TickCount - 1].x;
+        float x1 = Cap.Steps[Cap.TickCount - 2].x;
+        float velocity = x1 - x0;
+        Anim.SetFloat("Speed", Mathf.Abs(velocity)); // Animator uses this to pick animation
 
         // Check if flipping is necessary
-        if (x < -0.01 && FacingRight || x > 0.01 && !FacingRight) {
+        if (velocity > 0 && FacingRight || velocity < 0 && !FacingRight) {
             // Switch the way the player is labelled as facing.
             FacingRight = !FacingRight;
 
@@ -44,10 +43,12 @@ public class CharacterAnimator : MonoBehaviour {
 
     private void VerticalMovement() {
         // Compare the most recent position and the one before that to find the direction
-        float y = Cap.Steps[Cap.TickCount - 1].y;
+        float y0 = Cap.Steps[Cap.TickCount - 1].y;
+        float y1 = Cap.Steps[Cap.TickCount - 2].y;
 
-        float vSpeed = Mathf.Round((y)*100); // Spaghetti number six
+        float vSpeed = Mathf.Round((y0 - y1) * 100); // Spaghetti number six
         Anim.SetFloat("vSpeed", vSpeed); // Animator uses this to pick animation
+
         Anim.SetBool("Ground", vSpeed == 0);
     }
 }

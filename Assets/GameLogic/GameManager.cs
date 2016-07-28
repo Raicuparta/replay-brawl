@@ -8,18 +8,16 @@ public class GameManager : MonoBehaviour {
     public Capture Opponent;
     public PauseMenu Menu;
 
-    private TurnBasedMatch Match = null;
-    private MatchData Data = null;
-    private string FinalMessage = null;
-
-    private bool EndingTurn = false;
-
-    // countdown to hide instructions
-    private bool ShowInstructions = false;
+    Transform Objects;
+    TurnBasedMatch Match = null;
+    MatchData Data = null;
+    // True if current round is to be uploaded when finished
+    bool SubmitRound = false;
 
     void Start() {
         Match = ServicesManager.Match;
         Data = ServicesManager.Data;
+        Objects = transform.Find("Objects");
         LaunchMatch();
     }
 
@@ -30,31 +28,45 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    private void Reset() {
-        Match = null;
-        Data = null;
-        FinalMessage = null;
-        EndingTurn = false;
-        ShowInstructions = false;
-        Opponent.gameObject.SetActive(true);
-        Opponent.Reset();
-        //Player.Reset();
+    void LaunchMatch() {
+        // If there are no steps, it means we don't have a turn from the opponent
+        // So we just straight to the Solo Round to make the first move
+        if (Data.Steps == null) SoloRound();
+        else FightRound();
     }
 
-    void LaunchMatch() {
-        if (Data.Steps != null) {
-            Opponent.Steps = Data.Steps;
-            Opponent.Replaying = true;
-            MakeOpponentCollector();
-        } else {
-            Opponent.gameObject.SetActive(false);
+    // Round where the player plays alone to complete an objective
+    void SoloRound() {
+        Opponent.Reset();
+        Player.Reset();
+        Menu.Reset();
+        SubmitRound = true;
+        MakePlayerCollector();
+        Opponent.gameObject.SetActive(false);
+        foreach (Transform child in Objects) {
+            child.gameObject.SetActive(true);
+            child.tag = "Collectible";
         }
     }
 
+    // Round where the player tries to stop the opponent
+    void FightRound() {
+        SubmitRound = false;
+        Opponent.Steps = Data.Steps;
+        Opponent.Replaying = true;
+        MakeOpponentCollector();
+    }
+
     void MakeOpponentCollector() {
-        Debug.Log("Opponent is collector");
+        Debug.Log("Õpponent is collector");
         Player.gameObject.layer = 0;
         Opponent.gameObject.layer = 9;
+    }
+
+    void MakePlayerCollector() {
+        Debug.Log("Player is collector");
+        Player.gameObject.layer = 9;
+        Opponent.gameObject.layer = 0;
     }
 
     string DecideNextToPlay() {
@@ -69,13 +81,8 @@ public class GameManager : MonoBehaviour {
     }
 
     public void EndTurn() {
-        EndingTurn = true;
-        // do we have a winner?
-        if (Data.HasWinner) {
-            FinishMatch();
-        } else {
-            TakeTurn();
-        }
+        if (SubmitRound) TakeTurn();
+        else SoloRound();
     }
 
     string GetAdversaryParticipantId() {

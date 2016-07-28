@@ -5,8 +5,6 @@ using System.Collections.Generic;
 public class Capture : MonoBehaviour {
     public bool Recording = false;
     public bool Replaying = false;
-    
-    public static int DebugCount = 0;
 
     Rigidbody2D Body;
     PlatformerCharacter2D Player;
@@ -20,7 +18,6 @@ public class Capture : MonoBehaviour {
 
     [System.NonSerialized]
     public List<Step> Steps;
-    Vector2 PreviousPosition;
     [System.NonSerialized]
     public int TickCount = 0;
 
@@ -41,17 +38,6 @@ public class Capture : MonoBehaviour {
         OpponentAttack = GetComponent<Attack>();
     }
 
-    void Start() {
-        // Create the first step
-        // It marks the absolute starting position instead of a diff
-        Step step = new Step();
-        step.x = StartPosition.x;
-        step.y = StartPosition.y;
-        PreviousPosition = StartPosition;
-        Steps.Add(step);
-        DebugCount++;
-    }
-
     void FixedUpdate() {
         if (Recording || Replaying) TickCount++;
         if (Recording && PlayerControl) Record();
@@ -60,36 +46,33 @@ public class Capture : MonoBehaviour {
 
     void Record() {
         Step step = new Step();
-        step.x = transform.position.x - PreviousPosition.x;
-        step.y = transform.position.y - PreviousPosition.y;
+        step.x = transform.position.x;
+        step.y = transform.position.y;
         //Debug.Log("Recorded position for " + DebugCount + ": " + transform.position.x + ", " + transform.position.y);
         step.attack = PlayerControl.GetAttack();
         step.collect = Player.GetLastCollected();
         Player.ResetLastCollected(); // reset the collected item ID
-        PreviousPosition = transform.position;
         Steps.Add(step);
     }
 
     void Replay() {
         if (Recording) {
-            ToString();
-            TickCount = 0;
             Recording = false;
-            ToString();
-            transform.position = Vector2.zero;
+            TickCount = 0;
         }
         if (TickCount >= Steps.Count) return;
         Step step = Steps[TickCount];
-        transform.position += new Vector3(step.x, step.y);
+        transform.position = new Vector3(step.x, step.y);
         //Debug.Log("Replayed position for " + DebugCount + ": " + step.x + ", " + step.y);
         if (step.attack) OpponentAttack.TriggerAttack();
         if (step.collect != -1) Collect(step.collect); 
     }
 
     public void Reset() {
+        // TODO cleanup
         Steps.Clear();
-        transform.position = StartPosition;
         TickCount = 0;
+        GetComponent<HealthManager>().Reset();
     }
 
     void Collect(int id) {

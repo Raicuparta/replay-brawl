@@ -17,13 +17,20 @@ public class Timer : MonoBehaviour {
 	}
 	
 	void Update() {
-        if (!Player.IsNormal()) return;
+        if (!Player.IsNormal()) {
+            if (CurrentTime < InitialTime) Reset();
+            return;
+        }
         if (CurrentTime <= 0) {
             Timeout();
             return;
         }
         CurrentTime -= Time.deltaTime;
         Bar.value = 1 - CurrentTime / InitialTime;
+    }
+
+    public void Reset() {
+        CurrentTime = InitialTime;
     }
 
     void Timeout() {

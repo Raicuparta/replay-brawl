@@ -30,6 +30,11 @@ public class HealthManager : MonoBehaviour {
         InitialHealthScaleX = HealthBar.localScale.x;
     }
 
+    public void Reset() {
+        Start();
+        State = CharacterState.Normal;
+    }
+
     public void Hit() {
         if (!IsNormal()) return;
         Debug.Log("Registered Hit: " + Health);
@@ -56,6 +61,7 @@ public class HealthManager : MonoBehaviour {
 
     public void CheckIfWinner() {
         // Check if collected everything
+        // TODO do this more efficiently
         int count = GameObject.FindGameObjectsWithTag("Collectible").Length;
         Debug.LogWarning("Remaining obstacles: " + count);
         if (count <= 0) {

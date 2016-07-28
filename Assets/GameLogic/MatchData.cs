@@ -25,6 +25,7 @@ public class MatchData {
     }
 
     public byte[] ToBytes(List<Capture.Step> steps) {
+        Debug.Log("Buffer write to bytes");
         MemoryStream memStream = new MemoryStream();
         BinaryWriter w = new BinaryWriter(memStream);
         w.Write(Header);

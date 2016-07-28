@@ -35,7 +35,12 @@ public class PauseMenu : MonoBehaviour {
         else if (Opponent.IsDead() || Player.IsWinner()) EndTurn(VictoryTitle);
     }
 
+    public void Reset() {
+        FinishedTurn = false;
+    }
+
     void Show(string title) {
+        Time.timeScale = 0;
         Menu.enabled = true;
         Scaler.enabled = true;
         Title.text = title;
@@ -55,8 +60,9 @@ public class PauseMenu : MonoBehaviour {
     }
 
     public void Pause() {
-        Time.timeScale = 0;
         Show(DefaultTitle);
+        SetChildVisible("Next", false);
+        SetChildVisible("Resume", true);
     }
 
     public void EndTurn(string title) {
@@ -64,10 +70,16 @@ public class PauseMenu : MonoBehaviour {
         FinishedTurn = true;
         GameManager.EndTurn();
         Show(title);
+        SetChildVisible("Next", true);
+        SetChildVisible("Resume", false);
     }
 
     public void Exit() {
         if (!FinishedTurn) GameManager.Cancel();
         SceneManager.LoadScene("Menu");
+    }
+
+    void SetChildVisible(string name, bool visible) {
+        transform.Find(name).gameObject.SetActive(visible);
     }
 }
