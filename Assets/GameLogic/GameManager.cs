@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour {
         Data = ServicesManager.Data;
         Objects = transform.Find("Objects");
         LaunchMatch();
+        Menu.SetRound(Data.GetRound());
     }
 
     void Update() {
@@ -126,7 +127,10 @@ public class GameManager : MonoBehaviour {
 
     void SendTurn() {
         //SetStandBy("Sending...");
-        if (!IsSoloRound) Player.Steps.Clear();
+        if (IsSoloRound) {
+            Data.IncRound();
+            Menu.SetRound(Data.GetRound());
+        } else Player.Steps.Clear();
         PlayGamesPlatform.Instance.TurnBased.TakeTurn(Match, Data.ToBytes(Player.Steps),
             DecideNextToPlay(), (bool success) => {
                 //EndStandBy();

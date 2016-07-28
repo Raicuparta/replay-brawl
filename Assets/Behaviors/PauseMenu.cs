@@ -6,8 +6,10 @@ using UnityEngine.SceneManagement;
 public class PauseMenu : MonoBehaviour {
     // Text that shows on top of the menu
     Text Title;
+    Text RoundText;
     const string VictoryTitle = "Victory!";
     const string DefeatTitle = "Defeat :(";
+    const int MaxRounds = 6;
     string DefaultTitle;
     bool FinishedTurn = false;
     [SerializeField]
@@ -25,6 +27,7 @@ public class PauseMenu : MonoBehaviour {
         Menu = GetComponent<Canvas>();
         Scaler = GetComponent<CanvasScaler>();
         Title = transform.Find("Title").GetComponent<Text>();
+        RoundText = transform.Find("Round").GetComponent<Text>();
         DefaultTitle = Title.text;
         Menu.enabled = false;
         Scaler.enabled = false;
@@ -82,5 +85,9 @@ public class PauseMenu : MonoBehaviour {
 
     void SetChildVisible(string name, bool visible) {
         transform.Find(name).gameObject.SetActive(visible);
+    }
+
+    public void SetRound(int round) {
+        RoundText.text = "Round " + round +" of " + MaxRounds;
     }
 }
