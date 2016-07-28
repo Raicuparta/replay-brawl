@@ -8,17 +8,17 @@ public class Timer : MonoBehaviour {
     [SerializeField]
     float InitialTime = 60;
     float CurrentTime;
-    [SerializeField]
-    HealthManager Player;
+    public HealthManager Player;
+    public HealthManager Opponent;
 
     void Awake() {
         Bar = GetComponent<Scrollbar>();
         CurrentTime = InitialTime;
-	}
-	
-	void Update() {
-        if (!Player.IsNormal()) {
-            if (CurrentTime < InitialTime) Reset();
+    }
+
+    void Update() {
+        if (GameEnded()) {
+            Reset();
             return;
         }
         if (CurrentTime <= 0) {
@@ -27,6 +27,12 @@ public class Timer : MonoBehaviour {
         }
         CurrentTime -= Time.deltaTime;
         Bar.value = 1 - CurrentTime / InitialTime;
+    }
+
+    bool GameEnded() {
+        return CurrentTime < InitialTime &&
+        (!Player.IsNormal() ||
+        !Opponent.IsNormal());
     }
 
     public void Reset() {
