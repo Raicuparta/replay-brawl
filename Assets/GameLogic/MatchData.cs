@@ -8,9 +8,14 @@ public class MatchData {
     int Round = 0; // current round number
     public List<Capture.Step> Steps;
     public bool HasWinner = false;
-
+    // finish times for every round
+    List<float> FinishTimes;
+    // true if host wins, false if opponent wins, for every round
+    public List<bool> Victories; 
+    
     public MatchData() {
-
+        Victories = new List<bool>();
+        FinishTimes = new List<float>();
     }
 
     public MatchData(byte[] b) : this() {
@@ -18,6 +23,8 @@ public class MatchData {
             ReadFromBytes(b);
             ComputeWinner();
         }
+        Victories = new List<bool>();
+        FinishTimes = new List<float>();
     }
 
     private void ComputeWinner() {
@@ -32,6 +39,15 @@ public class MatchData {
 
         // Write the current round number
         w.Write(Round);
+
+        int nVictories = 0;
+        if (Victories != null) nVictories = Victories.Count;
+        w.Write(nVictories);
+        if (Victories != null) {
+            foreach (bool victory in Victories) {
+                w.Write(victory);
+            }
+        }
 
         // Write player steps
         // First we write the number of steps, so we know when to stop reading later
@@ -108,6 +124,12 @@ public class MatchData {
         // Read the current round number
         Round = r.ReadInt32();
 
+        int nVictories = r.ReadInt32();
+        Steps = new List<Capture.Step>();
+        for (int i = 0; i < nVictories; i++) {
+            Victories.Add(r.ReadBoolean());
+        }
+
         // Read the number of steps
         int nSteps = r.ReadInt32();
         //Debug.Log("Read nSteps: " + nSteps);
@@ -123,6 +145,16 @@ public class MatchData {
 
     public void IncRound() {
         Round++;
+    }
+
+    public void AddVictory(bool hostWins) {
+        if (Victories == null) Victories = new List<bool>();
+        Victories.Add(hostWins);
+    }
+
+    public void AddFinishTime(float time) {
+        if (FinishTimes == null) FinishTimes = new List<float>();
+        FinishTimes.Add(time);
     }
 
     public class UnsupportedMatchFormatException : System.Exception {

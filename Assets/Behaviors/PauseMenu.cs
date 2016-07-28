@@ -2,11 +2,13 @@
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class PauseMenu : MonoBehaviour {
     // Text that shows on top of the menu
     Text Title;
     Text RoundText;
+    Text Victories;
     const string VictoryTitle = "Victory!";
     const string DefeatTitle = "Defeat :(";
     const int MaxRounds = 6;
@@ -28,6 +30,7 @@ public class PauseMenu : MonoBehaviour {
         Scaler = GetComponent<CanvasScaler>();
         Title = transform.Find("Title").GetComponent<Text>();
         RoundText = transform.Find("Round").GetComponent<Text>();
+        Victories = transform.Find("Victories").GetComponent<Text>();
         DefaultTitle = Title.text;
         Menu.enabled = false;
         Scaler.enabled = false;
@@ -89,5 +92,12 @@ public class PauseMenu : MonoBehaviour {
 
     public void SetRound(int round) {
         RoundText.text = "Round " + round +" of " + MaxRounds;
+    }
+
+    public void SetVictories(List<bool> victories) {
+        if (victories == null) return;
+        foreach (bool hostWins in victories) {
+            Victories.text += " " + (hostWins ? "H" : "O");
+        }
     }
 }

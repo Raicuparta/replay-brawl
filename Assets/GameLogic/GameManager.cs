@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour {
         Objects = transform.Find("Objects");
         LaunchMatch();
         Menu.SetRound(Data.GetRound());
+        Menu.SetVictories(Data.Victories);
     }
 
     void Update() {
@@ -125,12 +126,27 @@ public class GameManager : MonoBehaviour {
         PlayGamesPlatform.Instance.TurnBased.GetAllMatches(OnGetAllMatches);
     }
 
+    // true if the current player is the host (the original creator of the match)
+    bool IsHost() {
+        return Data.GetRound() % 2 == 0;
+    }
+
+    // true if the host (not necessarily this player) won this round
+    bool HostWins() {
+        HealthManager player = Player.GetComponent<HealthManager>();
+        return player.IsWinner() == IsHost();
+    }
+
     void SendTurn() {
         //SetStandBy("Sending...");
         if (IsSoloRound) {
             Data.IncRound();
             Menu.SetRound(Data.GetRound());
-        } else Player.Steps.Clear();
+            Menu.SetVictories(Data.Victories);
+        } else {
+            Player.Steps.Clear();
+            Data.AddVictory(HostWins());
+        }
         PlayGamesPlatform.Instance.TurnBased.TakeTurn(Match, Data.ToBytes(Player.Steps),
             DecideNextToPlay(), (bool success) => {
                 //EndStandBy();
