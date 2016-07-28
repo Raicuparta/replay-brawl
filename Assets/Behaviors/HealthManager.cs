@@ -11,8 +11,6 @@ public class HealthManager : MonoBehaviour {
     float InitialHealthScaleX;
     CharacterState State = CharacterState.Normal;
     Animator Anim;
-    float DamageTime = 0;
-    const float StartDamageTime = 0.2f;
 
     enum CharacterState {
         Normal,

@@ -91,7 +91,7 @@ namespace GooglePlayServices
                 {
                     if (s.EndsWith(".cs") || s.EndsWith(".js"))
                     {
-                        Debug.Log(s + " imported, resolving play-services");
+                        //Debug.Log(s + " imported, resolving play-services");
                         return true;
                     }
                 }
@@ -101,7 +101,7 @@ namespace GooglePlayServices
                 {
                     if (s.StartsWith("Assets/Plugins/Android"))
                     {
-                        Debug.Log(s + " deleted, resolving play-services");
+                        //Debug.Log(s + " deleted, resolving play-services");
                         return true;
                     }
                 }

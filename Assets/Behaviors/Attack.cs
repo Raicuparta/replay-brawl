@@ -40,7 +40,6 @@ public class Attack : MonoBehaviour {
     }
 
     void ConnectAttack(Collider2D collider) {
-        Debug.Log("Detect Atack " + collider.name);
         Attacking = false;
         collider.GetComponentInParent<HealthManager>().Hit();
         Particles.Play();
@@ -55,7 +54,6 @@ public class Attack : MonoBehaviour {
     }
 
     public void EndAttack() {
-        Debug.Log("EndAttack");
         AttackAnimation = false;
         Attacking = false;
         CurrentAttackTime = 0;
@@ -64,7 +62,6 @@ public class Attack : MonoBehaviour {
 
     public void TriggerAttack() {
         if (!AttackAnimation) {
-        Debug.Log("TriggerAttack");
             AttackAnimation = true;
             Attacking = true;
             GetComponentInParent<Animator>().SetBool("Attack", true);

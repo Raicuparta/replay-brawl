@@ -29,6 +29,12 @@ public class GameManager : MonoBehaviour {
     }
 
     void LaunchMatch() {
+        #if UNITY_EDITOR
+        if (Data == null) {
+            FightRound();
+            return;
+        }
+        #endif
         // If there are no steps, it means we don't have a turn from the opponent
         // So we just straight to the Solo Round to make the first move
         if (Data.Steps == null) SoloRound();

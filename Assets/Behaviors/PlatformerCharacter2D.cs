@@ -76,7 +76,6 @@ public class PlatformerCharacter2D : MonoBehaviour {
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        Debug.Log("Collision with " + other.tag);
         if (other.tag == "Collectible") {
             Collectible collectible = other.GetComponent<Collectible>();
             collectible.Collect();

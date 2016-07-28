@@ -112,7 +112,7 @@ namespace GooglePlayServices
                 HandleOverwriteConfirmation);
 
             AssetDatabase.Refresh();
-            Debug.Log("Android Jar Dependencies: Resolution Complete");
+            //Debug.Log("Android Jar Dependencies: Resolution Complete");
         }
 
         /// <summary>
