@@ -9,6 +9,7 @@ public class PauseMenu : MonoBehaviour {
     Text Title;
     Text RoundText;
     Text Victories;
+    Text Times;
     const string VictoryTitle = "Victory!";
     const string DefeatTitle = "Defeat :(";
     const int MaxRounds = 6;
@@ -31,6 +32,7 @@ public class PauseMenu : MonoBehaviour {
         Title = transform.Find("Title").GetComponent<Text>();
         RoundText = transform.Find("Round").GetComponent<Text>();
         Victories = transform.Find("Victories").GetComponent<Text>();
+        Times = transform.Find("Times").GetComponent<Text>();
         DefaultTitle = Title.text;
         Menu.enabled = false;
         Scaler.enabled = false;
@@ -96,9 +98,18 @@ public class PauseMenu : MonoBehaviour {
 
     public void SetVictories(List<bool> victories) {
         if (victories == null) return;
-        Victories.text = "";
+        Victories.text = "Victories:";
         foreach (bool hostWins in victories) {
             Victories.text += " " + (hostWins ? "H" : "O");
+        }
+    }
+
+    public void SetTimes(List<float> times) {
+        if (times == null) return;
+        Times.text = "Times:";
+        foreach (float time in times) {
+            float rounded = Mathf.Round(time * 100) / 100;
+            Times.text += " " + rounded;
         }
     }
 }

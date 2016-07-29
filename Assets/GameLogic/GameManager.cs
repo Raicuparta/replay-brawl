@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour {
     public Capture Player;
     public Capture Opponent;
     public PauseMenu Menu;
+    public Timer MatchTimer;
 
     Transform Objects;
     TurnBasedMatch Match = null;
@@ -21,6 +22,7 @@ public class GameManager : MonoBehaviour {
         LaunchMatch();
         Menu.SetRound(Data.GetRound());
         Menu.SetVictories(Data.Victories);
+        Menu.SetTimes(Data.FinishTimes);
     }
 
     void Update() {
@@ -142,11 +144,13 @@ public class GameManager : MonoBehaviour {
         if (IsSoloRound) {
             Data.IncRound();
             Menu.SetRound(Data.GetRound());
+            Data.AddFinishTime(MatchTimer.GetFinalTime());
         } else {
             Player.Steps.Clear();
             Data.AddVictory(HostWins());
         }
         Menu.SetVictories(Data.Victories);
+        Menu.SetTimes(Data.FinishTimes);
         PlayGamesPlatform.Instance.TurnBased.TakeTurn(Match, Data.ToBytes(Player.Steps),
             DecideNextToPlay(), (bool success) => {
                 //EndStandBy();

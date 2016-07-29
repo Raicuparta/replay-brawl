@@ -9,10 +9,10 @@ public class MatchData {
     public List<Capture.Step> Steps;
     public bool HasWinner = false;
     // finish times for every round
-    List<float> FinishTimes;
+    public List<float> FinishTimes;
     // true if host wins, false if opponent wins, for every round
     public List<bool> Victories;
-    
+
     public MatchData() {
         Victories = new List<bool>();
         FinishTimes = new List<float>();
@@ -38,13 +38,20 @@ public class MatchData {
         // Write the current round number
         w.Write(Round);
 
-        int nVictories = 0;
-        nVictories = Victories.Count;
+        int nVictories = Victories.Count;
         w.Write(nVictories);
         Debug.Log("Writing victories");
         foreach (bool victory in Victories) {
             Debug.Log("Writing victory");
             w.Write(victory);
+        }
+        
+        int nTimes = FinishTimes.Count;
+        w.Write(nTimes);
+        Debug.Log("Writing times");
+        foreach (float time in FinishTimes) {
+            Debug.Log("Writing time");
+            w.Write(time);
         }
 
         // Write player steps
@@ -127,6 +134,13 @@ public class MatchData {
         for (int i = 0; i < nVictories; i++) {
             Debug.Log("Read victory");
             Victories.Add(r.ReadBoolean());
+        }
+
+        int nTimes = r.ReadInt32();
+        Debug.Log("Reading times");
+        for (int i = 0; i < nTimes; i++) {
+            Debug.Log("Read time");
+            FinishTimes.Add(r.ReadSingle());
         }
 
         // Read the number of steps

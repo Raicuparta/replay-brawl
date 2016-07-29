@@ -8,6 +8,7 @@ public class Timer : MonoBehaviour {
     [SerializeField]
     float InitialTime = 60;
     float CurrentTime;
+    float FinalTime = 0;
     public HealthManager Player;
     public HealthManager Opponent;
 
@@ -35,7 +36,13 @@ public class Timer : MonoBehaviour {
         !Opponent.IsNormal());
     }
 
-    public void Reset() {
+    public float GetFinalTime() {
+        Debug.Log("Final time: " + FinalTime);
+        return FinalTime;
+    }
+
+    void Reset() {
+        FinalTime = Mathf.Max(FinalTime, InitialTime - CurrentTime);
         CurrentTime = InitialTime;
     }
 
