@@ -130,13 +130,17 @@ public class GameManager : MonoBehaviour {
 
     // true if the current player is the host (the original creator of the match)
     bool IsHost() {
+        Debug.Log("IsHost: this is round " + Data.GetRound());
         return Data.GetRound() % 2 == 0;
     }
 
     // true if the host (not necessarily this player) won this round
     bool HostWins() {
         HealthManager player = Player.GetComponent<HealthManager>();
-        return player.IsWinner() == IsHost();
+        HealthManager opponent = Opponent.GetComponent<HealthManager>();
+        bool playerWins = opponent.IsDead() || player.IsWinner();
+        bool opponentWins = player.IsDead() || opponent.IsWinner();
+        return IsHost() ? playerWins : opponentWins;
     }
 
     void SendTurn() {
