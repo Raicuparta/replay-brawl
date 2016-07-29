@@ -12,7 +12,6 @@ public class PauseMenu : MonoBehaviour {
     Text Times;
     const string VictoryTitle = "Victory!";
     const string DefeatTitle = "Defeat :(";
-    const int MaxRounds = 6;
     string DefaultTitle;
     bool FinishedTurn = false;
     [SerializeField]
@@ -93,7 +92,7 @@ public class PauseMenu : MonoBehaviour {
     }
 
     public void SetRound(int round) {
-        RoundText.text = "Round " + round +" of " + MaxRounds;
+        RoundText.text = "Round " + round +" of " + GameManager.MaxRounds;
     }
 
     public void SetVictories(List<bool> victories) {

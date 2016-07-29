@@ -8,6 +8,8 @@ public class MatchData {
     int Round = 0; // current round number
     public List<Capture.Step> Steps;
     public bool HasWinner = false;
+    public bool HostWins = false;
+    public bool Tie = false;
     // finish times for every round
     public List<float> FinishTimes;
     // true if host wins, false if opponent wins, for every round
@@ -26,7 +28,35 @@ public class MatchData {
     }
 
     private void ComputeWinner() {
-        // TODO
+        if (Round <= GameManager.MaxRounds) return;
+        // If we exceed the max number of rounds, we have to end the match
+        // and figure out who the winner is
+        HasWinner = true;
+
+        // player with more victories wins
+        int hostVictories = 0;
+        int opponentVictories = 0;
+        foreach (bool victory in Victories) {
+            if (victory) hostVictories++;
+            else opponentVictories++;
+        }
+
+        if (hostVictories > opponentVictories) HostWins = true;
+        else if (hostVictories < opponentVictories) HostWins = false;
+        else {
+            // If we have a tie in the number of victories,
+            // we must compare the solo round finish times
+            float hostTime = 0;
+            float opponentTime = 0;
+            for (int i = 0; i < FinishTimes.Count; i++) {
+                float time = FinishTimes[i];
+                if (i % 2 == 0) hostTime += time;
+                else opponentTime += time;
+            }
+            if (hostTime > opponentTime) HostWins = true;
+            else if (hostTime < opponentTime) HostWins = false;
+            else Tie = true;
+        }
     }
 
     public byte[] ToBytes(List<Capture.Step> steps) {

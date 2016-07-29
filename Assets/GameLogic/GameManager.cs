@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour {
     public PauseMenu Menu;
     public Timer MatchTimer;
 
+    public const int MaxRounds = 6;
     Transform Objects;
     TurnBasedMatch Match = null;
     MatchData Data = null;
@@ -103,8 +104,7 @@ public class GameManager : MonoBehaviour {
     }
 
     void FinishMatch() {
-        // bool winnerIsMe = mMatchData.Winner == mMyMark;
-        bool winnerIsMe = false;
+        bool winnerIsMe = Data.HostWins == IsHost();
 
         // define the match's outcome
         MatchOutcome outcome = new MatchOutcome();
@@ -155,10 +155,17 @@ public class GameManager : MonoBehaviour {
         }
         Menu.SetVictories(Data.Victories);
         Menu.SetTimes(Data.FinishTimes);
+
+        if (Data.HasWinner) {
+            FinishMatch();
+            return;
+        }
+
         PlayGamesPlatform.Instance.TurnBased.TakeTurn(Match, Data.ToBytes(Player.Steps),
             DecideNextToPlay(), (bool success) => {
                 //EndStandBy();
                 Debug.Log(success ? "Turn taken" : "Error taking turn");
+
                 if (!IsSoloRound && success) SoloRound();
             });
     }
