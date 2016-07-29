@@ -96,6 +96,7 @@ public class PauseMenu : MonoBehaviour {
 
     public void SetVictories(List<bool> victories) {
         if (victories == null) return;
+        Victories.text = "";
         foreach (bool hostWins in victories) {
             Victories.text += " " + (hostWins ? "H" : "O");
         }

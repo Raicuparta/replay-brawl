@@ -142,11 +142,11 @@ public class GameManager : MonoBehaviour {
         if (IsSoloRound) {
             Data.IncRound();
             Menu.SetRound(Data.GetRound());
-            Menu.SetVictories(Data.Victories);
         } else {
             Player.Steps.Clear();
             Data.AddVictory(HostWins());
         }
+        Menu.SetVictories(Data.Victories);
         PlayGamesPlatform.Instance.TurnBased.TakeTurn(Match, Data.ToBytes(Player.Steps),
             DecideNextToPlay(), (bool success) => {
                 //EndStandBy();

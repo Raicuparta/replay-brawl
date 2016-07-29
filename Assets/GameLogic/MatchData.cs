@@ -11,7 +11,7 @@ public class MatchData {
     // finish times for every round
     List<float> FinishTimes;
     // true if host wins, false if opponent wins, for every round
-    public List<bool> Victories; 
+    public List<bool> Victories;
     
     public MatchData() {
         Victories = new List<bool>();
@@ -23,8 +23,6 @@ public class MatchData {
             ReadFromBytes(b);
             ComputeWinner();
         }
-        Victories = new List<bool>();
-        FinishTimes = new List<float>();
     }
 
     private void ComputeWinner() {
@@ -41,12 +39,12 @@ public class MatchData {
         w.Write(Round);
 
         int nVictories = 0;
-        if (Victories != null) nVictories = Victories.Count;
+        nVictories = Victories.Count;
         w.Write(nVictories);
-        if (Victories != null) {
-            foreach (bool victory in Victories) {
-                w.Write(victory);
-            }
+        Debug.Log("Writing victories");
+        foreach (bool victory in Victories) {
+            Debug.Log("Writing victory");
+            w.Write(victory);
         }
 
         // Write player steps
@@ -77,7 +75,7 @@ public class MatchData {
         // for the actions that have their bit set to 1.
         int mask = GenerateMask(step);
         w.Write(mask);
-        Debug.Log("Writing mask to bytes: " + mask);
+        //Debug.Log("Writing mask to bytes: " + mask);
         //Debug.Log("Writing position to bytes: " + step.x + ", " + step.y);
         w.Write(step.x);
         w.Write(step.y);
@@ -100,7 +98,7 @@ public class MatchData {
         // Read the mask to know which values we can read from the bytes
         // The others are set to their default values
         int mask = r.ReadInt32();
-        Debug.Log("Read mask from bytes: " + mask);
+        //Debug.Log("Read mask from bytes: " + mask);
         Capture.Step step = new Capture.Step();
         step.x = r.ReadSingle();
         step.y = r.ReadSingle();
@@ -125,8 +123,9 @@ public class MatchData {
         Round = r.ReadInt32();
 
         int nVictories = r.ReadInt32();
-        Steps = new List<Capture.Step>();
+        Debug.Log("Reading victories");
         for (int i = 0; i < nVictories; i++) {
+            Debug.Log("Read victory");
             Victories.Add(r.ReadBoolean());
         }
 
@@ -148,13 +147,13 @@ public class MatchData {
     }
 
     public void AddVictory(bool hostWins) {
-        if (Victories == null) Victories = new List<bool>();
         Victories.Add(hostWins);
+        Debug.Log("Added victory: " + Victories.Count);
     }
 
     public void AddFinishTime(float time) {
-        if (FinishTimes == null) FinishTimes = new List<float>();
         FinishTimes.Add(time);
+        Debug.Log("Added time: " + FinishTimes.Count);
     }
 
     public class UnsupportedMatchFormatException : System.Exception {
