@@ -8,6 +8,8 @@ using UnityEngine.UI;
 public class ServicesManager : MonoBehaviour {
     public static TurnBasedMatch Match;
     public static MatchData Data;
+    public Transform Stats;
+    public Transform Main;
 
     bool AuthOnStart = true;
     System.Action<bool> AuthCallback;
@@ -26,8 +28,8 @@ public class ServicesManager : MonoBehaviour {
             if (success) {
                 Debug.Log("Login Success");
                 // Activate menu buttons that require login
-                Transform menu = GameObject.Find("Canvas").transform; // TODO maybe move the menu stuff somewhere else
-                foreach (Transform child in menu) {
+                // TODO maybe move the menu stuff somewhere else
+                foreach (Transform child in Main) {
                     Button button = child.GetComponent<Button>();
                     if (child.name == "Login") {
                         // Show user name instead of Login button
@@ -91,6 +93,16 @@ public class ServicesManager : MonoBehaviour {
         PlayGamesPlatform.Instance.TurnBased.AcceptFromInbox(OnMatchStarted);
     }
 
+    protected void StatsMenu() {
+        Stats.gameObject.SetActive(true);
+        Main.gameObject.SetActive(false);
+    }
+
+    public void Back() {
+        Main.gameObject.SetActive(true);
+        Stats.gameObject.SetActive(false);
+    }
+
     protected void OnMatchStarted(bool success, TurnBasedMatch match) {
         if (!success) {
             Debug.LogError("Error starting match");
@@ -111,24 +123,27 @@ public class ServicesManager : MonoBehaviour {
             // MatchData.MatchData() correctly deals with that and initializes a
             // brand-new match in that case.
             Data = new MatchData(match.Data);
+            StatsMenu();
         } catch (MatchData.UnsupportedMatchFormatException ex) {
             Debug.LogWarning("Your game is out of date. Please update your game\n" +
                 "in order to play this match.");
             Debug.LogWarning("Failed to parse board data: " + ex.Message);
             return;
         }
+    }
 
-        bool canPlay = (match.Status == TurnBasedMatch.MatchStatus.Active &&
-                match.TurnStatus == TurnBasedMatch.MatchTurnStatus.MyTurn);
+    public void LoadMatch() {
+        bool canPlay = (Match.Status == TurnBasedMatch.MatchStatus.Active &&
+        Match.TurnStatus == TurnBasedMatch.MatchTurnStatus.MyTurn);
 
         if (!canPlay) {
-            Debug.Log(ExplainWhyICantPlay(match));
+            Debug.Log(ExplainWhyICantPlay(Match));
             return;
         }
 
         // if the match is in the completed state, acknowledge it
-        if (match.Status == TurnBasedMatch.MatchStatus.Complete) {
-            PlayGamesPlatform.Instance.TurnBased.AcknowledgeFinished(match,
+        if (Match.Status == TurnBasedMatch.MatchStatus.Complete) {
+            PlayGamesPlatform.Instance.TurnBased.AcknowledgeFinished(Match,
                     (bool s) => {
                         if (!s) {
                             Debug.LogError("Error acknowledging match finish.");
