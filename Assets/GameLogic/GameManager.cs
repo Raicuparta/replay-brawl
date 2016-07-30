@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour {
     public PauseMenu Menu;
     public Timer MatchTimer;
 
-    public const int MaxRounds = 4;
+    public const int MaxRounds = 2;
     Transform Objects;
     TurnBasedMatch Match = null;
     MatchData Data = null;
@@ -104,6 +104,8 @@ public class GameManager : MonoBehaviour {
 
     void FinishMatch() {
         bool winnerIsMe = Data.HostWins == IsHost();
+        Menu.Reset();
+        Menu.EndGame(winnerIsMe ? "Game over, you win!" : "Game over, you lose :(");
 
         // define the match's outcome
         MatchOutcome outcome = new MatchOutcome();

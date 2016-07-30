@@ -13,7 +13,7 @@ public class PauseMenu : MonoBehaviour {
     const string VictoryTitle = "Victory!";
     const string DefeatTitle = "Defeat :(";
     string DefaultTitle;
-    bool FinishedTurn = false;
+    public bool FinishedTurn = false;
     [SerializeField]
     HealthManager Player;
     [SerializeField]
@@ -80,6 +80,14 @@ public class PauseMenu : MonoBehaviour {
         Manager.EndTurn();
         Show(title);
         SetChildVisible("Resume", false);
+    }
+
+    public void EndGame(string title) {
+        if (FinishedTurn) return;
+        FinishedTurn = true;
+        SetChildVisible("Next", false);
+        SetChildVisible("Resume", false);
+        Show(title);
     }
 
     public void Exit() {
