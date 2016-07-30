@@ -10,6 +10,7 @@ public class MatchData {
     public bool HasWinner = false;
     public bool HostWins = false;
     public bool Tie = false;
+    public string HostId = "null";
     // finish times for every round
     public List<float> FinishTimes;
     // true if host wins, false if opponent wins, for every round
@@ -64,6 +65,8 @@ public class MatchData {
         MemoryStream memStream = new MemoryStream();
         BinaryWriter w = new BinaryWriter(memStream);
         w.Write(Header);
+        Debug.Log("Writing Host ID: " + HostId);
+        w.Write(HostId);
 
         // Write the current round number
         w.Write(Round);
@@ -156,6 +159,8 @@ public class MatchData {
             throw new UnsupportedMatchFormatException("Board data header " + header +
                     " not recognized.");
         }
+        HostId = r.ReadString();
+        Debug.Log("Read Host ID: " + HostId);
         // Read the current round number
         Round = r.ReadInt32();
 

@@ -28,7 +28,6 @@ public class GameManager : MonoBehaviour {
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            // TODO actually pause
             Menu.Toggle();
         }
     }
@@ -39,7 +38,7 @@ public class GameManager : MonoBehaviour {
             FightRound();
             return;
         }
-        #endif
+#endif
         // If there are no steps, it means we don't have a turn from the opponent
         // So we just straight to the Solo Round to make the first move
         if (Data.Steps == null || Data.Steps.Count == 0) SoloRound();

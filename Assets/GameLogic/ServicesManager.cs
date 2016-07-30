@@ -122,6 +122,15 @@ public class ServicesManager : MonoBehaviour {
             // MatchData.MatchData() correctly deals with that and initializes a
             // brand-new match in that case.
             Data = new MatchData(match.Data);
+            if (Data.HostId == "null") Data.HostId = ServicesManager.Match.SelfParticipantId;
+
+            Debug.Log("HERY round: " + Data.GetRound());
+            for (int i = 0; i < match.Participants.Count; i++) {
+                Participant p = match.Participants[i];
+                Debug.Log("HERY participant " + i + " " + p.DisplayName + " id: " + p.ParticipantId);
+            }
+
+
             StatsMenu();
         } catch (MatchData.UnsupportedMatchFormatException ex) {
             Debug.LogWarning("Your game is out of date. Please update your game\n" +

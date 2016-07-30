@@ -12,7 +12,7 @@ public class StatsPanel : MonoBehaviour {
     Text Victories;
     Text Status;
     Button Start;
-    public int Index;
+    public bool IsHost;
 
     void Awake() {
         Username = transform.Find("Username").GetComponent<Text>();
@@ -26,20 +26,28 @@ public class StatsPanel : MonoBehaviour {
         Debug.Log("Enable stats panel");
         TurnBasedMatch match = ServicesManager.Match;
         MatchData data = ServicesManager.Data;
-        Participant player = match.Participants[Index];
+
+        Participant player;
+        if (match.Participants[0].ParticipantId == data.HostId && IsHost)
+            player = match.Participants[0];
+        else
+            player = match.Participants[1];
         Username.text = player.DisplayName;
+
+        int index = IsHost ? 0 : 1;
+        
         string newLine = System.Environment.NewLine;
 
         Times.text = "";
         for (int i = 0; i < data.FinishTimes.Count; i++) {
             float time = Mathf.Round(data.FinishTimes[i] * 100) / 100;
-            if (i % 2 == Index) Times.text += time + newLine;
+            if (i % 2 == index) Times.text += time + newLine;
         }
 
         Victories.text = "";
         for (int i = 0; i < data.Victories.Count; i++) {
             bool victory = data.Victories[i];
-            if (i % 2 == Index) Victories.text += (victory ? "V" : "X") + newLine;
+            if (i % 2 == index) Victories.text += (victory ? "V" : "X") + newLine;
         }
 
         Start.interactable = false;
