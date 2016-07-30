@@ -29,7 +29,7 @@ public class MatchData {
     }
 
     private void ComputeWinner() {
-        if (Round <= GameManager.MaxRounds) return;
+        if (Round < GameManager.MaxRounds) return;
         // If we exceed the max number of rounds, we have to end the match
         // and figure out who the winner is
         HasWinner = true;

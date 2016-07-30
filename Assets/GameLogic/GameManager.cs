@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour {
     public PauseMenu Menu;
     public Timer MatchTimer;
 
-    public const int MaxRounds = 6;
+    public const int MaxRounds = 4;
     Transform Objects;
     TurnBasedMatch Match = null;
     MatchData Data = null;
