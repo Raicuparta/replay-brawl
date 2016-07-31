@@ -24,7 +24,7 @@ public class Attack : MonoBehaviour {
     void OnTriggerStay2D(Collider2D collider) {
         //Debug.Log("Detect Atack1 " + collider.tag);
         // Register hit
-        if (Attacking && collider.tag == "Attackable") {
+        if (Bullet == null && Attacking && collider.tag == "Attackable") {
             ConnectAttack(collider);
         }
     }
