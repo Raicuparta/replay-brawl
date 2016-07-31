@@ -3,10 +3,8 @@ using System.Collections;
 
 public class HealthManager : MonoBehaviour {
     int Health;
-    [SerializeField]
-    int InitialHealth = 100;
-    [SerializeField]
-    int HealthDecrement = 10; // Amount of health to remove when receiving an attack
+    public int InitialHealth = 100;
+    public int HealthDecrement = 10; // Amount of health to remove when receiving an attack
     Transform HealthBar;
     float InitialHealthScaleX;
     CharacterState State = CharacterState.Normal;

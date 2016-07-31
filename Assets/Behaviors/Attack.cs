@@ -10,16 +10,14 @@ public class Attack : MonoBehaviour {
     Rigidbody2D Body;
     ParticleSystem Particles;
 
-    [SerializeField]
-    float AttackPauseTime = 0.1f;  // How long to freeze the game for when attack connects
-    [SerializeField]
-    float ShakeAplitude = 0.1f;    // How much to shake the screen when an attack connects
-    [SerializeField]
-    float ShakeTime = 0.2f;
+    public ParticleSystem OriginalParticles;
+    public float AttackPauseTime = 0.1f;  // How long to freeze the game for when attack connects
+    public float ShakeAplitude = 0.1f;    // How much to shake the screen when an attack connects
+    public float ShakeTime = 0.2f;
     public Camera MainCamera;
+    public Rigidbody2D Bullet;
 
     private void Awake() {
-        Particles = GetComponent<ParticleSystem>();
         Body = GetComponentInParent<Rigidbody2D>();
     }
 
@@ -42,9 +40,16 @@ public class Attack : MonoBehaviour {
     void ConnectAttack(Collider2D collider) {
         Attacking = false;
         collider.GetComponentInParent<HealthManager>().Hit();
-        Particles.Play();
+        PlayParticles();
         StartCoroutine(PauseFor(AttackPauseTime));
         ShakeScreen();
+    }
+
+    void PlayParticles() {
+        if (Particles == null)
+            Particles = GameObject.Instantiate<ParticleSystem>(OriginalParticles);
+        Particles.transform.position = transform.position;
+        Particles.Play();
     }
 
     public void UpdateAttack() {
@@ -65,6 +70,7 @@ public class Attack : MonoBehaviour {
             AttackAnimation = true;
             Attacking = true;
             GetComponentInParent<Animator>().SetBool("Attack", true);
+            if (Bullet != null) ShootBullet();
         }
     }
 
@@ -95,5 +101,11 @@ public class Attack : MonoBehaviour {
 
     void StopShaking() {
         CancelInvoke("StartShaking");
+    }
+
+    void ShootBullet() {
+        Rigidbody2D bullet = GameObject.Instantiate<Rigidbody2D>(Bullet);
+        bullet.position = transform.position;
+        bullet.AddForce(Vector2.right * Body.transform.lossyScale.x * 20, ForceMode2D.Impulse);
     }
 }

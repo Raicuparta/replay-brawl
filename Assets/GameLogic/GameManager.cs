@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour {
     }
 
     void MakeOpponentCollector() {
-        Debug.Log("Õpponent is collector");
+        Debug.Log("Opponent is collector");
         Player.gameObject.layer = 0;
         Opponent.gameObject.layer = 9;
     }
