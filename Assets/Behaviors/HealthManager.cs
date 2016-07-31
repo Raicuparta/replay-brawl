@@ -9,6 +9,12 @@ public class HealthManager : MonoBehaviour {
     float InitialHealthScaleX;
     CharacterState State = CharacterState.Normal;
     Animator Anim;
+    ParticleSystem Particles;
+    public ParticleSystem OriginalParticles;
+    public float AttackPauseTime = 0.1f;  // How long to freeze the game for when attack connects
+    public float ShakeAplitude = 0.1f;    // How much to shake the screen when an attack connects
+    public float ShakeTime = 0.2f;
+    public Camera MainCamera;
 
     enum CharacterState {
         Normal,
@@ -35,7 +41,9 @@ public class HealthManager : MonoBehaviour {
         if (!IsNormal()) return;
         Debug.Log("Registered Hit: " + Health);
         Anim.SetTrigger("Damage");
-
+        PlayParticles();
+        StartCoroutine(PauseFor(AttackPauseTime));
+        ShakeScreen();
         // Decrease health
         Health -= HealthDecrement;
         UpdateHealthBar();
@@ -81,4 +89,40 @@ public class HealthManager : MonoBehaviour {
     public bool IsNormal() {
         return State == CharacterState.Normal;
     }
+
+    void PlayParticles() {
+        if (Particles == null)
+            Particles = GameObject.Instantiate<ParticleSystem>(OriginalParticles);
+        Particles.transform.position = transform.position;
+        Particles.Play();
+    }
+    private IEnumerator PauseFor(float time) {
+        Time.timeScale = 0f;
+        float pauseEndTime = Time.realtimeSinceStartup + time;
+        while (Time.realtimeSinceStartup < pauseEndTime) {
+            yield return 0;
+        }
+        Time.timeScale = 1;
+    }
+
+    void ShakeScreen() {
+        InvokeRepeating("StartShaking", 0, .01f);
+        Invoke("StopShaking", ShakeTime);
+    }
+
+    void StartShaking() {
+        if (ShakeAplitude > 0) {
+            float shakeX = Random.value * ShakeAplitude * 2 - ShakeAplitude;
+            float shakeY = Random.value * ShakeAplitude * 2 - ShakeAplitude;
+            Vector3 pp = MainCamera.transform.position;
+            pp.x += shakeX;
+            pp.y += shakeY;
+            MainCamera.transform.position = pp;
+        }
+    }
+
+    void StopShaking() {
+        CancelInvoke("StartShaking");
+    }
+
 }
