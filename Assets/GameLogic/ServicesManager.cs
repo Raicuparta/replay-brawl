@@ -138,16 +138,6 @@ public class ServicesManager : MonoBehaviour {
             Debug.LogWarning("Failed to parse board data: " + ex.Message);
             return;
         }
-    }
-
-    public void LoadMatch() {
-        bool canPlay = (Match.Status == TurnBasedMatch.MatchStatus.Active &&
-        Match.TurnStatus == TurnBasedMatch.MatchTurnStatus.MyTurn);
-
-        if (!canPlay) {
-            Debug.Log(ExplainWhyICantPlay(Match));
-            return;
-        }
 
         // if the match is in the completed state, acknowledge it
         if (Match.Status == TurnBasedMatch.MatchStatus.Complete) {
@@ -157,6 +147,16 @@ public class ServicesManager : MonoBehaviour {
                             Debug.LogError("Error acknowledging match finish.");
                         }
                     });
+        }
+    }
+
+    public void LoadMatch() {
+        bool canPlay = (Match.Status == TurnBasedMatch.MatchStatus.Active &&
+        Match.TurnStatus == TurnBasedMatch.MatchTurnStatus.MyTurn);
+
+        if (!canPlay) {
+            Debug.Log(ExplainWhyICantPlay(Match));
+            return;
         }
 
         SceneManager.LoadScene("Stage");
